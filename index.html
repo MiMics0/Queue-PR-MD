@@ -30,13 +30,15 @@
   tr:last-child td{border-bottom:none}
   tr.r-active td{background:#0f2040}
   tr.r-done td{opacity:.35}
-  tr.r-busy td{background:#1f1608}
+  tr.r-skip td{background:#1f1608}
+  tr.r-away td{background:#1a0f1f}
 
   .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
   .bw{background:#1e2433;color:#64748b;border:1px solid #2d3748}
   .ba{background:#1e3a5f;color:#60a5fa}
   .bd{background:#14311a;color:#4ade80}
-  .bb{background:#2d1f00;color:#fbbf24}
+  .bs{background:#2d1f00;color:#fbbf24}
+  .baway{background:#2d1030;color:#c084fc;border:1px solid #6b21a8}
 
   .role-op{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;background:#2d1f4e;color:#a78bfa}
   .role-u{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;background:#1e2433;color:#64748b;border:1px solid #2d3748}
@@ -54,19 +56,21 @@
   .xbtn.c:hover{background:#166534}
   .xbtn.s{background:#2d1f00;color:#fbbf24;border-color:#78350f}
   .xbtn.s:hover{background:#78350f}
+  .xbtn.away{background:#2d1030;color:#c084fc;border-color:#6b21a8}
+  .xbtn.away:hover{background:#3b0764}
   .xbtn.d{color:#f87171;border-color:#450a0a}
   .xbtn.d:hover{background:#1f0a0a}
 
   .num{font-weight:600;color:#374151;font-size:12px}
   .name-cell{font-weight:500;color:#e2e8f0}
   .op-note{font-size:10px;color:#374151;margin-left:5px}
+  .away-note{font-size:10px;color:#7c3aed;margin-left:5px;font-weight:600}
 
   .bot{display:flex;justify-content:flex-end;margin-top:.85rem}
   .rbtn{height:30px;padding:0 14px;font-size:12px;border:1px solid #2d3748;border-radius:8px;background:#1a1f2e;color:#64748b;cursor:pointer;transition:background .12s}
   .rbtn:hover{background:#252d3d;color:#94a3b8}
 
   .empty{text-align:center;padding:2.5rem;color:#374151;font-size:13px}
-
   .toast{position:fixed;bottom:1.75rem;left:50%;transform:translateX(-50%);background:#14311a;color:#4ade80;border:1px solid #166534;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap}
   .toast.show{opacity:1}
   .round-badge{display:inline-block;margin-left:8px;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;background:#1e3a5f;color:#60a5fa;vertical-align:middle}
@@ -77,7 +81,6 @@
   }
 </style>
 
-<!-- SVG icons defined once, reused via <use> — ไม่พึ่ง font และไม่โดน CSP บล็อก -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
   <symbol id="ico-up" viewBox="0 0 10 7">
     <path d="M5 1L1 6h8z" fill="currentColor"/>
@@ -122,31 +125,46 @@
     <button class="rbtn" onclick="hardReset()">รีเซ็ตและล้างรายชื่อ</button>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-let q = [
+/* สถานะ:
+   waiting  = รอ
+   active   = กำลังดำเนิน
+   done     = เสร็จแล้ว (รอบนี้)
+   skip     = ไม่ว่าง/ข้าม (แค่รอบนี้ → reset กลับเป็น waiting)
+   away     = ไม่ว่างยาว (ข้ามทุกรอบ จนกว่าจะกดกลับเอง)
+*/
+var q = [
   {id:1, name:'สมชาย',  role:'user',     st:'waiting'},
   {id:2, name:'สมหญิง', role:'operator', st:'waiting'},
   {id:3, name:'วิชัย',  role:'user',     st:'waiting'},
-  {id:4, name:'นภา',    role:'user',     st:'waiting'},
+  {id:4, name:'นภา',    role:'user',     st:'waiting'}
 ];
-let nid = 5, round = 1;
+var nid = 5, round = 1;
 
 function showToast(msg) {
-  const t = document.getElementById('toast');
+  var t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(function(){ t.classList.remove('show'); }, 2800);
 }
 
+function isOut(st) { return st === 'done' || st === 'skip' || st === 'away'; }
+
 function allFinished() {
-  return q.length > 0 && q.every(function(p){ return p.st === 'done' || p.st === 'busy'; });
+  if (q.length === 0) return false;
+  for (var i = 0; i < q.length; i++) {
+    if (!isOut(q[i].st)) return false;
+  }
+  return true;
 }
 
 function softReset() {
   round++;
-  q = q.map(function(p){ return Object.assign({}, p, {st:'waiting'}); });
+  for (var i = 0; i < q.length; i++) {
+    // away คงสถานะไว้, อื่นๆ reset เป็น waiting
+    if (q[i].st !== 'away') q[i].st = 'waiting';
+  }
   ensureActive();
   showToast('รอบที่ ' + round + ' เริ่มแล้ว — กดเช็คใหม่ได้เลย');
   render();
@@ -184,28 +202,37 @@ function add() {
 }
 
 function done(id) {
-  var p = null;
-  for (var i = 0; i < q.length; i++) if (q[i].id === id) { p = q[i]; break; }
-  if (!p) return;
+  var p = findById(id); if (!p) return;
   p.st = 'done';
   var n = nextWaiting();
   if (n !== -1) q[n].st = 'active';
   if (allFinished()) setTimeout(softReset, 600); else render();
 }
 
-function busy(id) {
-  var p = null;
-  for (var i = 0; i < q.length; i++) if (q[i].id === id) { p = q[i]; break; }
-  if (!p) return;
+function skip(id) {
+  var p = findById(id); if (!p) return;
   var wasA = p.st === 'active';
-  p.st = 'busy';
+  p.st = 'skip';
   if (wasA) { var n = nextWaiting(); if (n !== -1) q[n].st = 'active'; }
   if (allFinished()) setTimeout(softReset, 600); else render();
 }
 
+function setAway(id) {
+  var p = findById(id); if (!p) return;
+  var wasA = p.st === 'active';
+  p.st = 'away';
+  if (wasA) { var n = nextWaiting(); if (n !== -1) q[n].st = 'active'; }
+  if (allFinished()) setTimeout(softReset, 600); else render();
+}
+
+function backToQueue(id) {
+  var p = findById(id); if (!p) return;
+  p.st = 'waiting';
+  ensureActive(); render();
+}
+
 function del(id) {
-  var idx = -1;
-  for (var i = 0; i < q.length; i++) if (q[i].id === id) { idx = i; break; }
+  var idx = findIdx(id);
   if (idx === -1) return;
   var wasA = q[idx].st === 'active';
   q.splice(idx, 1);
@@ -214,26 +241,26 @@ function del(id) {
 }
 
 function moveUp(id) {
-  var i = -1;
-  for (var j = 0; j < q.length; j++) if (q[j].id === id) { i = j; break; }
-  if (i <= 0) return;
+  var i = findIdx(id); if (i <= 0) return;
   var tmp = q[i-1]; q[i-1] = q[i]; q[i] = tmp;
   ensureActive(); render();
 }
 
 function moveDown(id) {
-  var i = -1;
-  for (var j = 0; j < q.length; j++) if (q[j].id === id) { i = j; break; }
-  if (i === -1 || i >= q.length - 1) return;
+  var i = findIdx(id); if (i === -1 || i >= q.length - 1) return;
   var tmp = q[i+1]; q[i+1] = q[i]; q[i] = tmp;
   ensureActive(); render();
 }
+
+function findById(id) { for (var i = 0; i < q.length; i++) if (q[i].id === id) return q[i]; return null; }
+function findIdx(id) { for (var i = 0; i < q.length; i++) if (q[i].id === id) return i; return -1; }
 
 function sLabel(s) {
   if (s === 'waiting') return '<span class="badge bw">รอ</span>';
   if (s === 'active')  return '<span class="badge ba">กำลังดำเนิน</span>';
   if (s === 'done')    return '<span class="badge bd">เสร็จแล้ว</span>';
-  if (s === 'busy')    return '<span class="badge bb">ไม่ว่าง / ข้าม</span>';
+  if (s === 'skip')    return '<span class="badge bs">ไม่ว่าง / ข้าม</span>';
+  if (s === 'away')    return '<span class="badge baway">&#128683; ไม่ว่างยาว</span>';
   return '';
 }
 
@@ -241,29 +268,32 @@ function render() {
   ensureActive();
   var tb = document.getElementById('qb');
   var em = document.getElementById('em');
-  var rl = document.getElementById('roundLabel');
-  rl.innerHTML = round > 1 ? '<span class="round-badge">รอบที่ ' + round + '</span>' : '';
+  document.getElementById('roundLabel').innerHTML = round > 1
+    ? '<span class="round-badge">รอบที่ ' + round + '</span>' : '';
 
   if (q.length === 0) { tb.innerHTML = ''; em.style.display = 'block'; return; }
   em.style.display = 'none';
 
-  var rows = '';
-  var n = 0;
+  var rows = '', n = 0;
   for (var i = 0; i < q.length; i++) {
     var p = q[i];
     if (p.st === 'waiting' || p.st === 'active') n++;
 
-    var rc = p.st === 'active' ? 'r-active' : p.st === 'done' ? 'r-done' : p.st === 'busy' ? 'r-busy' : '';
+    var rc = p.st === 'active' ? 'r-active'
+           : p.st === 'done'   ? 'r-done'
+           : p.st === 'skip'   ? 'r-skip'
+           : p.st === 'away'   ? 'r-away' : '';
+
     var rb = p.role === 'operator'
       ? '<span class="role-op">Operator</span>'
       : '<span class="role-u">ทั่วไป</span>';
-    var opNote = p.role === 'operator' ? '<span class="op-note">(ข้าม)</span>' : '';
+    var opNote   = p.role === 'operator' ? '<span class="op-note">(ข้าม)</span>' : '';
+    var awayNote = p.st === 'away' ? '<span class="away-note">ไม่ว่างยาว</span>' : '';
 
-    var canMove = p.st !== 'done' && p.st !== 'busy';
+    var canMove = p.st !== 'done' && p.st !== 'skip' && p.st !== 'away';
     var upDis   = (!canMove || i === 0) ? ' disabled' : '';
     var downDis = (!canMove || i === q.length - 1) ? ' disabled' : '';
 
-    // SVG via <use href> — ทำงานได้ทุก browser สมัยใหม่ ไม่โดน CSP
     var arrows = '<div class="move-col">'
       + '<button class="mbtn"' + upDis + ' onclick="moveUp(' + p.id + ')" title="เลื่อนขึ้น">'
       + '<svg width="10" height="7"><use href="#ico-up"></use></svg></button>'
@@ -274,18 +304,23 @@ function render() {
     var btns = '';
     if (p.st === 'active') {
       btns += '<button class="xbtn c" onclick="done(' + p.id + ')">&#10003; เช็ค</button>';
-      btns += '<button class="xbtn s" onclick="busy(' + p.id + ')">&#10005; ไม่ว่าง</button>';
+      btns += '<button class="xbtn s" onclick="skip(' + p.id + ')">&#10005; ไม่ว่าง</button>';
+      btns += '<button class="xbtn away" onclick="setAway(' + p.id + ')">&#128683; ไม่ว่างยาว</button>';
     } else if (p.st === 'waiting') {
-      btns += '<button class="xbtn s" onclick="busy(' + p.id + ')">&#10005; ไม่ว่าง</button>';
-    } else if (p.st === 'busy') {
+      btns += '<button class="xbtn s" onclick="skip(' + p.id + ')">&#10005; ไม่ว่าง</button>';
+      btns += '<button class="xbtn away" onclick="setAway(' + p.id + ')">&#128683; ไม่ว่างยาว</button>';
+    } else if (p.st === 'skip') {
       btns += '<button class="xbtn c" onclick="done(' + p.id + ')">&#10003; เสร็จแล้ว</button>';
+      btns += '<button class="xbtn away" onclick="setAway(' + p.id + ')">&#128683; ไม่ว่างยาว</button>';
+    } else if (p.st === 'away') {
+      btns += '<button class="xbtn c" onclick="backToQueue(' + p.id + ')">&#8617; กลับเข้าคิว</button>';
     }
     btns += '<button class="xbtn d" onclick="del(' + p.id + ')">ลบ</button>';
 
-    var numD = (p.st === 'done' || p.st === 'busy') ? '&mdash;' : n;
+    var numD = isOut(p.st) ? '&mdash;' : n;
     rows += '<tr class="' + rc + '">'
       + '<td class="num">' + numD + '</td>'
-      + '<td><span class="name-cell">' + p.name + '</span>' + opNote + '</td>'
+      + '<td><span class="name-cell">' + p.name + '</span>' + opNote + awayNote + '</td>'
       + '<td>' + rb + '</td>'
       + '<td>' + sLabel(p.st) + '</td>'
       + '<td><div class="acts">' + arrows + '<div class="sep"></div>' + btns + '</div></td>'
@@ -293,16 +328,18 @@ function render() {
   }
   tb.innerHTML = rows;
 
-  var w = 0, d = 0, b = 0;
+  var w = 0, d = 0, s = 0, a = 0;
   for (var i = 0; i < q.length; i++) {
     if (q[i].st === 'waiting') w++;
     else if (q[i].st === 'done') d++;
-    else if (q[i].st === 'busy') b++;
+    else if (q[i].st === 'skip') s++;
+    else if (q[i].st === 'away') a++;
   }
   document.getElementById('stats').innerHTML =
     '<div class="stat">รอ: <b>' + w + '</b></div>' +
     '<div class="stat">เสร็จ: <b>' + d + '</b></div>' +
-    '<div class="stat">ไม่ว่าง/ข้าม: <b>' + b + '</b></div>' +
+    '<div class="stat">ข้าม: <b>' + s + '</b></div>' +
+    '<div class="stat">ไม่ว่างยาว: <b>' + a + '</b></div>' +
     '<div class="stat">ทั้งหมด: <b>' + q.length + '</b></div>';
 }
 
