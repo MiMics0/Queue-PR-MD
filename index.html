@@ -43,12 +43,12 @@
 
   .acts{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
 
-  /* ปุ่มลูกศรเลื่อนคิว */
-  .move-col{display:flex;flex-direction:column;gap:2px;margin-right:4px}
-  .mbtn{width:22px;height:19px;padding:0;font-size:10px;border:1px solid #2d3748;border-radius:5px;background:#1a1f2e;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .1s,color .1s,border-color .1s}
+  .move-col{display:flex;flex-direction:column;gap:2px;margin-right:2px}
+  .mbtn{width:24px;height:20px;padding:0;border:1px solid #2d3748;border-radius:5px;background:#1a1f2e;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .1s,color .1s,border-color .1s}
   .mbtn:hover:not(:disabled){background:#252d3d;color:#94a3b8;border-color:#3d4f6b}
-  .mbtn:disabled{opacity:.18;cursor:default}
-  .sep{width:1px;height:20px;background:#2d3748;margin:0 2px;flex-shrink:0}
+  .mbtn:disabled{opacity:.18;cursor:default;pointer-events:none}
+  .mbtn svg{display:block}
+  .sep{width:1px;height:20px;background:#2d3748;margin:0 3px;flex-shrink:0}
 
   .xbtn{height:27px;padding:0 10px;font-size:11px;font-weight:600;border:1px solid #2d3748;border-radius:7px;background:#1a1f2e;color:#cbd5e1;cursor:pointer;white-space:nowrap;transition:background .12s,border-color .12s}
   .xbtn:hover{background:#252d3d;border-color:#3d4f6b}
@@ -119,6 +119,9 @@
 <div class="toast" id="toast"></div>
 
 <script>
+var SVG_UP   = '<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 1L1 6h8L5 1z" fill="currentColor"/></svg>';
+var SVG_DOWN = '<svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 6L9 1H1l4 5z" fill="currentColor"/></svg>';
+
 let q = [
   {id:1, name:'สมชาย',  role:'user',     st:'waiting'},
   {id:2, name:'สมหญิง', role:'operator', st:'waiting'},
@@ -200,9 +203,7 @@ function moveUp(id) {
   const i = q.findIndex(x => x.id === id);
   if (i <= 0) return;
   [q[i-1], q[i]] = [q[i], q[i-1]];
-  // fix active: first waiting in new order becomes active
-  const curAct = q.find(p => p.st === 'active');
-  if (!curAct) ensureActive();
+  if (!q.find(p => p.st === 'active')) ensureActive();
   render();
 }
 
@@ -210,8 +211,7 @@ function moveDown(id) {
   const i = q.findIndex(x => x.id === id);
   if (i >= q.length - 1) return;
   [q[i], q[i+1]] = [q[i+1], q[i]];
-  const curAct = q.find(p => p.st === 'active');
-  if (!curAct) ensureActive();
+  if (!q.find(p => p.st === 'active')) ensureActive();
   render();
 }
 
@@ -242,27 +242,27 @@ function render() {
       : '<span class="role-u">ทั่วไป</span>';
     const opNote = p.role === 'operator' ? '<span class="op-note">(ข้าม)</span>' : '';
 
-    // ปุ่มลูกศร — ซ่อนถ้า done/busy เพราะเรียงไม่มีความหมาย
     const canMove = p.st !== 'done' && p.st !== 'busy';
-    const upDis   = (!canMove || i === 0) ? 'disabled' : '';
-    const downDis = (!canMove || i === q.length - 1) ? 'disabled' : '';
+    const upDis   = (!canMove || i === 0) ? ' disabled' : '';
+    const downDis = (!canMove || i === q.length - 1) ? ' disabled' : '';
+
     const arrows = `<div class="move-col">
-      <button class="mbtn" onclick="moveUp(${p.id})" ${upDis} title="เลื่อนขึ้น">▲</button>
-      <button class="mbtn" onclick="moveDown(${p.id})" ${downDis} title="เลื่อนลง">▼</button>
+      <button class="mbtn"${upDis} onclick="moveUp(${p.id})" title="เลื่อนขึ้น">${SVG_UP}</button>
+      <button class="mbtn"${downDis} onclick="moveDown(${p.id})" title="เลื่อนลง">${SVG_DOWN}</button>
     </div>`;
 
     let btns = '';
     if (p.st === 'active') {
-      btns += `<button class="xbtn c" onclick="done(${p.id})">✓ เช็ค</button>`;
-      btns += `<button class="xbtn s" onclick="busy(${p.id})">✕ ไม่ว่าง</button>`;
+      btns += `<button class="xbtn c" onclick="done(${p.id})">&#10003; เช็ค</button>`;
+      btns += `<button class="xbtn s" onclick="busy(${p.id})">&#10005; ไม่ว่าง</button>`;
     } else if (p.st === 'waiting') {
-      btns += `<button class="xbtn s" onclick="busy(${p.id})">✕ ไม่ว่าง</button>`;
+      btns += `<button class="xbtn s" onclick="busy(${p.id})">&#10005; ไม่ว่าง</button>`;
     } else if (p.st === 'busy') {
-      btns += `<button class="xbtn c" onclick="done(${p.id})">✓ เสร็จแล้ว</button>`;
+      btns += `<button class="xbtn c" onclick="done(${p.id})">&#10003; เสร็จแล้ว</button>`;
     }
     btns += `<button class="xbtn d" onclick="del(${p.id})">ลบ</button>`;
 
-    const numD = (p.st === 'done' || p.st === 'busy') ? '—' : n;
+    const numD = (p.st === 'done' || p.st === 'busy') ? '&mdash;' : n;
     return `<tr class="${rc}">
       <td class="num">${numD}</td>
       <td><span class="name-cell">${p.name}</span>${opNote}</td>
