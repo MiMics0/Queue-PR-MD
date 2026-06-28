@@ -6,36 +6,41 @@
 <title>ระบบรันคิว</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1117;color:#e2e8f0;min-height:100vh;padding:2rem 1rem}
-.wrap{max-width:760px;margin:0 auto}
-h1{font-size:20px;font-weight:600;color:#f1f5f9;margin-bottom:1.5rem}
-.add-row{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
-.add-row input{flex:1;min-width:140px;height:38px;padding:0 12px;border:1px solid #2d3748;border-radius:8px;font-size:14px;background:#1a1f2e;color:#e2e8f0;outline:none}
-.add-row input:focus{border-color:#3b82f6}
-.add-row input::placeholder{color:#475569}
-.add-row select{height:38px;padding:0 10px;border:1px solid #2d3748;border-radius:8px;font-size:13px;background:#1a1f2e;color:#e2e8f0}
-.abtn{height:38px;padding:0 16px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#3b82f6;color:#fff}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1117;color:#e2e8f0;min-height:100vh;padding:1.5rem 1rem}
+.wrap{max-width:820px;margin:0 auto}
+h1{font-size:20px;font-weight:600;color:#f1f5f9;margin-bottom:1.25rem}
+.tabs{display:flex;gap:4px;margin-bottom:1.25rem;border-bottom:1px solid #2d3748;padding-bottom:0}
+.tab{height:34px;padding:0 18px;font-size:13px;font-weight:600;border:none;background:none;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+.tab.active{color:#60a5fa;border-bottom-color:#60a5fa}
+.tab:hover:not(.active){color:#94a3b8}
+.panel{display:none}.panel.active{display:block}
+.member-add{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+.member-add input{flex:1;min-width:140px;height:36px;padding:0 12px;border:1px solid #2d3748;border-radius:8px;font-size:14px;background:#1a1f2e;color:#e2e8f0;outline:none}
+.member-add input:focus{border-color:#3b82f6}
+.member-add input::placeholder{color:#475569}
+.member-add select{height:36px;padding:0 10px;border:1px solid #2d3748;border-radius:8px;font-size:13px;background:#1a1f2e;color:#e2e8f0}
+.abtn{height:36px;padding:0 14px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#3b82f6;color:#fff}
 .abtn:hover{background:#2563eb}
 .stats{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap}
-.stat{background:#1a1f2e;border:1px solid #2d3748;border-radius:8px;padding:6px 14px;font-size:12px;color:#64748b}
+.stat{background:#1a1f2e;border:1px solid #2d3748;border-radius:8px;padding:5px 12px;font-size:12px;color:#64748b}
 .stat b{color:#cbd5e1;font-weight:600}
 .tbl-wrap{border:1px solid #2d3748;border-radius:12px;overflow:hidden}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:#151820;color:#475569;font-weight:600;font-size:11px;padding:10px 14px;text-align:left;border-bottom:1px solid #2d3748;text-transform:uppercase;letter-spacing:.5px}
-td{padding:10px 14px;border-bottom:1px solid #1e2433;color:#cbd5e1;vertical-align:middle}
+th{background:#151820;color:#475569;font-weight:600;font-size:11px;padding:9px 13px;text-align:left;border-bottom:1px solid #2d3748;text-transform:uppercase;letter-spacing:.5px}
+td{padding:9px 13px;border-bottom:1px solid #1e2433;color:#cbd5e1;vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr.row-active td{background:#0f2040}
 tr.row-done td{opacity:.35}
 tr.row-skip td{background:#251800}
 tr.row-away td{background:#1e0f2a}
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;line-height:1.4}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;line-height:1.4}
 .badge-wait{background:#1e2433;color:#64748b;border:1px solid #2d3748}
 .badge-active{background:#1e3a5f;color:#60a5fa}
 .badge-done{background:#14311a;color:#4ade80}
 .badge-skip{background:#2d1f00;color:#fbbf24}
 .badge-away{background:#2d1030;color:#c084fc;border:1px solid #6b21a8}
-.role-op{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;background:#2d1f4e;color:#a78bfa}
-.role-user{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;background:#1e2433;color:#64748b;border:1px solid #2d3748}
+.role-op{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;background:#2d1f4e;color:#a78bfa}
+.role-user{font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px;background:#1e2433;color:#64748b;border:1px solid #2d3748}
 .acts{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
 .move-col{display:flex;flex-direction:column;gap:2px;margin-right:2px}
 .mbtn{width:24px;height:20px;padding:0;border:1px solid #2d3748;border-radius:5px;background:#1a1f2e;color:#94a3b8;cursor:pointer;font-size:10px;line-height:1;display:flex;align-items:center;justify-content:center}
@@ -60,48 +65,345 @@ tr.row-away td{background:#1e0f2a}
 .bot{display:flex;justify-content:flex-end;margin-top:.85rem}
 .rbtn{height:30px;padding:0 14px;font-size:12px;border:1px solid #2d3748;border-radius:8px;background:#1a1f2e;color:#64748b;cursor:pointer}
 .rbtn:hover{background:#252d3d;color:#94a3b8}
-.empty{text-align:center;padding:2.5rem;color:#374151;font-size:13px}
+.empty-q{text-align:center;padding:2.5rem;color:#374151;font-size:13px}
 .toast{position:fixed;bottom:1.75rem;left:50%;transform:translateX(-50%);background:#14311a;color:#4ade80;border:1px solid #166534;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap}
 .toast.show{opacity:1}
 .round-badge{display:inline-block;margin-left:8px;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;background:#1e3a5f;color:#60a5fa;vertical-align:middle}
+.hint{font-size:12px;color:#475569;margin-bottom:1rem}
+.member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.member-card{position:relative;padding:10px 12px;border-radius:10px;cursor:pointer;border:1.5px solid #2d3748;background:#1a1f2e;transition:border-color .15s,background .15s;user-select:none}
+.member-card:hover{border-color:#3d4f6b;background:#1e2535}
+.member-card.in-queue{border-color:#3b82f6;background:#0f2040}
+.member-card.in-queue .mc-name{color:#60a5fa}
+.member-card.is-away{border-color:#6b21a8;background:#1e0f2a;opacity:.6;cursor:default}
+.mc-name{font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:3px}
+.mc-role{font-size:10px;font-weight:600;padding:1px 7px;border-radius:10px;display:inline-block}
+.mc-role.op{background:#2d1f4e;color:#a78bfa}
+.mc-role.user{background:#1e2433;color:#64748b;border:1px solid #2d3748}
+.mc-status{font-size:10px;margin-top:4px;color:#64748b}
+.mc-status.active-st{color:#60a5fa}
+.mc-status.away-st{color:#a78bfa}
+.mc-del{position:absolute;top:6px;right:8px;background:none;border:none;color:#374151;cursor:pointer;font-size:13px;padding:0;line-height:1}
+.mc-del:hover{color:#f87171}
+.empty-members{text-align:center;padding:2rem;color:#374151;font-size:13px}
+.save-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#4ade80;margin-left:8px;vertical-align:middle;opacity:0;transition:opacity .3s}
+.save-dot.show{opacity:1}
 @media(max-width:540px){
   body{padding:1rem .5rem}
   th:nth-child(3),td:nth-child(3){display:none}
+  .member-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
 }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>ระบบรันคิว <span id="roundLabel"></span></h1>
-  <div class="add-row">
-    <input type="text" id="ni" placeholder="ชื่อผู้เข้าคิว..." maxlength="30"/>
-    <select id="rs">
-      <option value="user">ทั่วไป</option>
-      <option value="operator">Operator</option>
-    </select>
-    <button class="abtn" onclick="add()">+ เพิ่มคิว</button>
+  <h1>ระบบรันคิว <span id="roundLabel"></span><span class="save-dot" id="saveDot"></span></h1>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('queue')">คิว</button>
+    <button class="tab" onclick="switchTab('members')">จัดการรายชื่อ</button>
   </div>
-  <div class="stats" id="stats"></div>
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th style="width:36px">#</th>
-          <th>ชื่อ</th>
+
+  <!-- QUEUE PANEL -->
+  <div class="panel active" id="panel-queue">
+    <p class="hint">กดชื่อในหน้า "จัดการรายชื่อ" เพื่อเพิ่มเข้าคิว หรือเพิ่มชั่วคราวด้านล่าง</p>
+    <div class="member-add">
+      <input type="text" id="qni" placeholder="ชื่อชั่วคราว (ไม่บันทึก)..." maxlength="30"/>
+      <select id="qrs"><option value="user">ทั่วไป</option><option value="operator">Operator</option></select>
+      <button class="abtn" onclick="addTemp()">+ เพิ่มชั่วคราว</button>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:36px">#</th><th>ชื่อ</th>
           <th style="width:95px">ตำแหน่ง</th>
           <th style="width:130px">สถานะ</th>
           <th>จัดการ</th>
-        </tr>
-      </thead>
-      <tbody id="qb"></tbody>
-    </table>
-    <div class="empty" id="em" style="display:none">ยังไม่มีคิว</div>
+        </tr></thead>
+        <tbody id="qb"></tbody>
+      </table>
+      <div class="empty-q" id="em">ยังไม่มีคิว — ไปหน้า "จัดการรายชื่อ" แล้วกดชื่อเพื่อเพิ่ม</div>
+    </div>
+    <div class="bot"><button class="rbtn" onclick="hardReset()">รีเซ็ตและล้างคิว</button></div>
   </div>
-  <div class="bot">
-    <button class="rbtn" onclick="hardReset()">รีเซ็ตและล้างรายชื่อ</button>
+
+  <!-- MEMBERS PANEL -->
+  <div class="panel" id="panel-members">
+    <div class="member-add">
+      <input type="text" id="mni" placeholder="ชื่อสมาชิก..." maxlength="30"/>
+      <select id="mrs"><option value="user">ทั่วไป</option><option value="operator">Operator</option></select>
+      <button class="abtn" onclick="addMember()">+ เพิ่มสมาชิก</button>
+    </div>
+    <p class="hint">กดการ์ดเพื่อเพิ่ม/ถอดออกจากคิว — รายชื่อบันทึกอัตโนมัติในเครื่องนี้</p>
+    <div class="member-grid" id="memberGrid"></div>
+    <div class="empty-members" id="emMembers" style="display:none">ยังไม่มีสมาชิก</div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<script src="queue.js"></script>
+
+<script>
+var MKEY='queueapp_members';
+var QKEY='queueapp_queue';
+var NKEY='queueapp_nid';
+
+/* ===== LOAD from localStorage ===== */
+function loadData(){
+  try{
+    var m=localStorage.getItem(MKEY);
+    var q=localStorage.getItem(QKEY);
+    var n=localStorage.getItem(NKEY);
+    members = m ? JSON.parse(m) : [
+      {id:1,name:'สมชาย', role:'user'},
+      {id:2,name:'สมหญิง',role:'operator'},
+      {id:3,name:'วิชัย', role:'user'},
+      {id:4,name:'นภา',   role:'user'}
+    ];
+    queue   = q ? JSON.parse(q) : [];
+    nid     = n ? parseInt(n,10) : 5;
+  } catch(e){
+    members=[]; queue=[]; nid=1;
+  }
+}
+
+/* ===== SAVE to localStorage ===== */
+function saveData(){
+  try{
+    localStorage.setItem(MKEY, JSON.stringify(members));
+    localStorage.setItem(QKEY, JSON.stringify(queue));
+    localStorage.setItem(NKEY, String(nid));
+    /* แสดง dot สีเขียวสั้นๆ */
+    var dot=document.getElementById('saveDot');
+    dot.classList.add('show');
+    setTimeout(function(){dot.classList.remove('show');},800);
+  } catch(e){}
+}
+
+var members=[], queue=[], nid=1, qid=100, round=1;
+
+/* ===== TABS ===== */
+function switchTab(name){
+  var tabs=document.querySelectorAll('.tab');
+  tabs[0].classList.toggle('active',name==='queue');
+  tabs[1].classList.toggle('active',name==='members');
+  document.getElementById('panel-queue').classList.toggle('active',name==='queue');
+  document.getElementById('panel-members').classList.toggle('active',name==='members');
+  if(name==='members') renderMembers();
+}
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2400);
+}
+
+/* ===== MEMBERS ===== */
+function addMember(){
+  var inp=document.getElementById('mni'),role=document.getElementById('mrs').value;
+  var name=inp.value.trim(); if(!name){inp.focus();return;}
+  members.push({id:nid++,name:name,role:role});
+  inp.value=''; saveData(); renderMembers();
+}
+
+function deleteMember(mid){
+  queue=queue.filter(function(q){return q.memberId!==mid;});
+  members=members.filter(function(m){return m.id!==mid;});
+  ensureActive(); saveData(); renderMembers(); renderQueue();
+}
+
+function toggleMember(mid){
+  var m=memberById(mid); if(!m) return;
+  var inQ=null;
+  for(var i=0;i<queue.length;i++) if(queue[i].memberId===mid){inQ=queue[i];break;}
+  if(inQ){
+    if(inQ.st==='away') return;
+    var wasA=inQ.st==='active';
+    queue=queue.filter(function(q){return q.memberId!==mid;});
+    if(wasA){var n=nextWaiting();if(n!==-1)queue[n].st='active';}
+    if(allFinished()&&queue.length>0) setTimeout(softReset,600);
+  } else {
+    queue.push({id:qid++,name:m.name,role:m.role,st:'waiting',memberId:mid});
+    ensureActive();
+  }
+  saveData(); renderMembers(); renderQueue();
+}
+
+function memberById(id){for(var i=0;i<members.length;i++) if(members[i].id===id) return members[i]; return null;}
+
+function renderMembers(){
+  var grid=document.getElementById('memberGrid');
+  var em=document.getElementById('emMembers');
+  if(!members.length){grid.innerHTML='';em.style.display='block';return;}
+  em.style.display='none';
+  grid.innerHTML=members.map(function(m){
+    var inQ=null;
+    for(var i=0;i<queue.length;i++) if(queue[i].memberId===m.id){inQ=queue[i];break;}
+    var st=inQ?inQ.st:'';
+    var isAway=st==='away';
+    var cls='member-card'+(inQ&&!isAway?' in-queue':'')+(isAway?' is-away':'');
+    var stLabel='';
+    if(st==='active')  stLabel='<div class="mc-status active-st">กำลังดำเนิน</div>';
+    else if(st==='waiting') stLabel='<div class="mc-status">อยู่ในคิว</div>';
+    else if(st==='skip')    stLabel='<div class="mc-status">ไม่ว่าง/ข้าม</div>';
+    else if(st==='away')    stLabel='<div class="mc-status away-st">ไม่ว่างยาว</div>';
+    else if(st==='done')    stLabel='<div class="mc-status">เสร็จแล้ว</div>';
+    var roleHtml=m.role==='operator'?'<span class="mc-role op">Operator</span>':'<span class="mc-role user">ทั่วไป</span>';
+    var clickAttr=isAway?'':'onclick="toggleMember('+m.id+')"';
+    return '<div class="'+cls+'" '+clickAttr+'>'
+      +'<button class="mc-del" onclick="event.stopPropagation();deleteMember('+m.id+')">x</button>'
+      +'<div class="mc-name">'+m.name+'</div>'
+      +roleHtml+stLabel+'</div>';
+  }).join('');
+}
+
+/* ===== QUEUE ===== */
+function addTemp(){
+  var inp=document.getElementById('qni'),role=document.getElementById('qrs').value;
+  var name=inp.value.trim(); if(!name){inp.focus();return;}
+  queue.push({id:qid++,name:name,role:role,st:'waiting'});
+  inp.value=''; ensureActive(); saveData(); renderQueue(); renderMembers();
+}
+
+function isOut(st){return st==='done'||st==='skip'||st==='away';}
+function allFinished(){
+  if(!queue.length) return false;
+  for(var i=0;i<queue.length;i++) if(!isOut(queue[i].st)) return false;
+  return true;
+}
+function softReset(){
+  round++;
+  for(var i=0;i<queue.length;i++) if(queue[i].st!=='away') queue[i].st='waiting';
+  ensureActive(); saveData();
+  showToast('รอบที่ '+round+' เริ่มแล้ว');
+  renderQueue(); renderMembers();
+}
+function hardReset(){
+  queue=[]; round=1; saveData(); renderQueue(); renderMembers();
+}
+function actIdx(){for(var i=0;i<queue.length;i++) if(queue[i].st==='active') return i; return -1;}
+function ensureActive(){
+  if(actIdx()===-1)
+    for(var i=0;i<queue.length;i++) if(queue[i].st==='waiting'){queue[i].st='active';break;}
+}
+function nextWaiting(){
+  var c=actIdx(),s=c===-1?0:c+1;
+  for(var i=s;i<queue.length;i++) if(queue[i].st==='waiting') return i;
+  return -1;
+}
+function byQId(id){for(var i=0;i<queue.length;i++) if(queue[i].id===id) return queue[i]; return null;}
+function idxOfQ(id){for(var i=0;i<queue.length;i++) if(queue[i].id===id) return i; return -1;}
+
+function checkDone(id){
+  var p=byQId(id); if(!p) return;
+  p.st='done'; var n=nextWaiting(); if(n!==-1) queue[n].st='active';
+  saveData();
+  if(allFinished()) setTimeout(softReset,600); else{renderQueue();renderMembers();}
+}
+function doSkip(id){
+  var p=byQId(id); if(!p) return;
+  var wasA=p.st==='active'; p.st='skip';
+  if(wasA){var n=nextWaiting();if(n!==-1)queue[n].st='active';}
+  saveData();
+  if(allFinished()) setTimeout(softReset,600); else{renderQueue();renderMembers();}
+}
+function doAway(id){
+  var p=byQId(id); if(!p) return;
+  var wasA=p.st==='active'; p.st='away';
+  if(wasA){var n=nextWaiting();if(n!==-1)queue[n].st='active';}
+  saveData();
+  if(allFinished()) setTimeout(softReset,600); else{renderQueue();renderMembers();}
+}
+function doBack(id){
+  var p=byQId(id); if(!p) return;
+  p.st='waiting'; ensureActive(); saveData(); renderQueue(); renderMembers();
+}
+function doDelete(id){
+  var i=idxOfQ(id); if(i===-1) return;
+  var wasA=queue[i].st==='active'; queue.splice(i,1);
+  if(wasA) for(var j=0;j<queue.length;j++) if(queue[j].st==='waiting'){queue[j].st='active';break;}
+  saveData(); renderQueue(); renderMembers();
+}
+function moveUp(id){
+  var i=idxOfQ(id); if(i<=0) return;
+  var t=queue[i-1];queue[i-1]=queue[i];queue[i]=t; ensureActive(); saveData(); renderQueue();
+}
+function moveDown(id){
+  var i=idxOfQ(id); if(i===-1||i>=queue.length-1) return;
+  var t=queue[i+1];queue[i+1]=queue[i];queue[i]=t; ensureActive(); saveData(); renderQueue();
+}
+
+function badgeHtml(st){
+  if(st==='waiting') return '<span class="badge badge-wait">รอ</span>';
+  if(st==='active')  return '<span class="badge badge-active">กำลังดำเนิน</span>';
+  if(st==='done')    return '<span class="badge badge-done">เสร็จแล้ว</span>';
+  if(st==='skip')    return '<span class="badge badge-skip">ไม่ว่าง/ข้าม</span>';
+  if(st==='away')    return '<span class="badge badge-away">ไม่ว่างยาว</span>';
+  return '';
+}
+
+function renderQueue(){
+  ensureActive();
+  var tb=document.getElementById('qb'),em=document.getElementById('em');
+  document.getElementById('roundLabel').innerHTML=round>1?'<span class="round-badge">รอบที่ '+round+'</span>':'';
+  if(!queue.length){tb.innerHTML='';em.style.display='block';return;}
+  em.style.display='none';
+  var rows='',n=0;
+  for(var i=0;i<queue.length;i++){
+    var p=queue[i];
+    if(p.st==='waiting'||p.st==='active') n++;
+    var rc=p.st==='active'?'row-active':p.st==='done'?'row-done':p.st==='skip'?'row-skip':p.st==='away'?'row-away':'';
+    var rb=p.role==='operator'?'<span class="role-op">Operator</span>':'<span class="role-user">ทั่วไป</span>';
+    var opNote=p.role==='operator'?'<span class="op-note">(ข้าม)</span>':'';
+    var canMove=p.st==='waiting'||p.st==='active';
+    var upDis=(!canMove||i===0)?' disabled':'';
+    var dnDis=(!canMove||i===queue.length-1)?' disabled':'';
+    var arrows='<div class="move-col">'
+      +'<button class="mbtn"'+upDis+' onclick="moveUp('+p.id+')">^</button>'
+      +'<button class="mbtn"'+dnDis+' onclick="moveDown('+p.id+')">v</button>'
+      +'</div>';
+    var btns='';
+    if(p.st==='active'){
+      btns+='<button class="xbtn xbtn-check" onclick="checkDone('+p.id+')">เช็ค</button>';
+      btns+='<button class="xbtn xbtn-skip" onclick="doSkip('+p.id+')">ไม่ว่าง</button>';
+      btns+='<button class="xbtn xbtn-away" onclick="doAway('+p.id+')">ไม่ว่างยาว</button>';
+    } else if(p.st==='waiting'){
+      btns+='<button class="xbtn xbtn-skip" onclick="doSkip('+p.id+')">ไม่ว่าง</button>';
+      btns+='<button class="xbtn xbtn-away" onclick="doAway('+p.id+')">ไม่ว่างยาว</button>';
+    } else if(p.st==='skip'){
+      btns+='<button class="xbtn xbtn-check" onclick="checkDone('+p.id+')">เสร็จแล้ว</button>';
+      btns+='<button class="xbtn xbtn-away" onclick="doAway('+p.id+')">ไม่ว่างยาว</button>';
+    } else if(p.st==='away'){
+      btns+='<button class="xbtn xbtn-back" onclick="doBack('+p.id+')">กลับเข้าคิว</button>';
+    }
+    btns+='<button class="xbtn xbtn-del" onclick="doDelete('+p.id+')">ลบ</button>';
+    var numD=isOut(p.st)?'-':n;
+    rows+='<tr class="'+rc+'">'
+      +'<td class="num">'+numD+'</td>'
+      +'<td><span class="name-txt">'+p.name+'</span>'+opNote+'</td>'
+      +'<td>'+rb+'</td>'
+      +'<td>'+badgeHtml(p.st)+'</td>'
+      +'<td><div class="acts">'+arrows+'<div class="sep"></div>'+btns+'</div></td>'
+      +'</tr>';
+  }
+  tb.innerHTML=rows;
+  var cW=0,cD=0,cS=0,cA=0;
+  for(var i=0;i<queue.length;i++){
+    var s=queue[i].st;
+    if(s==='waiting')cW++; else if(s==='done')cD++; else if(s==='skip')cS++; else if(s==='away')cA++;
+  }
+  document.getElementById('stats').innerHTML=
+    '<div class="stat">รอ: <b>'+cW+'</b></div>'+
+    '<div class="stat">เสร็จ: <b>'+cD+'</b></div>'+
+    '<div class="stat">ข้าม: <b>'+cS+'</b></div>'+
+    '<div class="stat">ไม่ว่างยาว: <b>'+cA+'</b></div>'+
+    '<div class="stat">ทั้งหมด: <b>'+queue.length+'</b></div>';
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  loadData();
+  renderQueue();
+  document.getElementById('qni').addEventListener('keydown',function(e){if(e.key==='Enter')addTemp();});
+  document.getElementById('mni').addEventListener('keydown',function(e){if(e.key==='Enter')addMember();});
+});
+</script>
 </body>
 </html>
