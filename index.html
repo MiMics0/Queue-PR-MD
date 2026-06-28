@@ -58,13 +58,14 @@
   .xbtn.s:hover{background:#78350f}
   .xbtn.away{background:#2d1030;color:#c084fc;border-color:#6b21a8}
   .xbtn.away:hover{background:#3b0764}
+  .xbtn.back{background:#1e2433;color:#94a3b8;border-color:#3d4f6b}
+  .xbtn.back:hover{background:#252d3d}
   .xbtn.d{color:#f87171;border-color:#450a0a}
   .xbtn.d:hover{background:#1f0a0a}
 
   .num{font-weight:600;color:#374151;font-size:12px}
   .name-cell{font-weight:500;color:#e2e8f0}
   .op-note{font-size:10px;color:#374151;margin-left:5px}
-  .away-note{font-size:10px;color:#7c3aed;margin-left:5px;font-weight:600}
 
   .bot{display:flex;justify-content:flex-end;margin-top:.85rem}
   .rbtn{height:30px;padding:0 14px;font-size:12px;border:1px solid #2d3748;border-radius:8px;background:#1a1f2e;color:#64748b;cursor:pointer;transition:background .12s}
@@ -112,13 +113,13 @@
           <th style="width:36px">#</th>
           <th>ชื่อ</th>
           <th style="width:95px">ตำแหน่ง</th>
-          <th style="width:120px">สถานะ</th>
+          <th style="width:130px">สถานะ</th>
           <th>จัดการ</th>
         </tr>
       </thead>
       <tbody id="qb"></tbody>
     </table>
-    <div class="empty" id="em" style="display:none">ยังไม่มีคิว — เพิ่มชื่อด้านบนได้เลย</div>
+    <div class="empty" id="em" style="display:none">ยังไม่มีคิว</div>
   </div>
 
   <div class="bot">
@@ -128,13 +129,6 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* สถานะ:
-   waiting  = รอ
-   active   = กำลังดำเนิน
-   done     = เสร็จแล้ว (รอบนี้)
-   skip     = ไม่ว่าง/ข้าม (แค่รอบนี้ → reset กลับเป็น waiting)
-   away     = ไม่ว่างยาว (ข้ามทุกรอบ จนกว่าจะกดกลับเอง)
-*/
 var q = [
   {id:1, name:'สมชาย',  role:'user',     st:'waiting'},
   {id:2, name:'สมหญิง', role:'operator', st:'waiting'},
@@ -145,11 +139,14 @@ var nid = 5, round = 1;
 
 function showToast(msg) {
   var t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
+  t.textContent = msg;
+  t.classList.add('show');
   setTimeout(function(){ t.classList.remove('show'); }, 2800);
 }
 
-function isOut(st) { return st === 'done' || st === 'skip' || st === 'away'; }
+function isOut(st) {
+  return st === 'done' || st === 'skip' || st === 'away';
+}
 
 function allFinished() {
   if (q.length === 0) return false;
@@ -162,11 +159,10 @@ function allFinished() {
 function softReset() {
   round++;
   for (var i = 0; i < q.length; i++) {
-    // away คงสถานะไว้, อื่นๆ reset เป็น waiting
     if (q[i].st !== 'away') q[i].st = 'waiting';
   }
   ensureActive();
-  showToast('รอบที่ ' + round + ' เริ่มแล้ว — กดเช็คใหม่ได้เลย');
+  showToast('รอบที่ ' + round + ' เริ่มแล้ว');
   render();
 }
 
@@ -191,6 +187,16 @@ function nextWaiting() {
   return -1;
 }
 
+function findById(id) {
+  for (var i = 0; i < q.length; i++) if (q[i].id === id) return q[i];
+  return null;
+}
+
+function findIdx(id) {
+  for (var i = 0; i < q.length; i++) if (q[i].id === id) return i;
+  return -1;
+}
+
 function add() {
   var inp = document.getElementById('ni');
   var role = document.getElementById('rs').value;
@@ -198,7 +204,8 @@ function add() {
   if (!name) { inp.focus(); return; }
   q.push({id: nid++, name: name, role: role, st:'waiting'});
   inp.value = '';
-  ensureActive(); render();
+  ensureActive();
+  render();
 }
 
 function done(id) {
@@ -228,15 +235,19 @@ function setAway(id) {
 function backToQueue(id) {
   var p = findById(id); if (!p) return;
   p.st = 'waiting';
-  ensureActive(); render();
+  ensureActive();
+  render();
 }
 
 function del(id) {
-  var idx = findIdx(id);
-  if (idx === -1) return;
+  var idx = findIdx(id); if (idx === -1) return;
   var wasA = q[idx].st === 'active';
   q.splice(idx, 1);
-  if (wasA) { for (var i = 0; i < q.length; i++) { if (q[i].st === 'waiting') { q[i].st = 'active'; break; } } }
+  if (wasA) {
+    for (var i = 0; i < q.length; i++) {
+      if (q[i].st === 'waiting') { q[i].st = 'active'; break; }
+    }
+  }
   render();
 }
 
@@ -252,15 +263,12 @@ function moveDown(id) {
   ensureActive(); render();
 }
 
-function findById(id) { for (var i = 0; i < q.length; i++) if (q[i].id === id) return q[i]; return null; }
-function findIdx(id) { for (var i = 0; i < q.length; i++) if (q[i].id === id) return i; return -1; }
-
 function sLabel(s) {
   if (s === 'waiting') return '<span class="badge bw">รอ</span>';
   if (s === 'active')  return '<span class="badge ba">กำลังดำเนิน</span>';
   if (s === 'done')    return '<span class="badge bd">เสร็จแล้ว</span>';
-  if (s === 'skip')    return '<span class="badge bs">ไม่ว่าง / ข้าม</span>';
-  if (s === 'away')    return '<span class="badge baway">&#128683; ไม่ว่างยาว</span>';
+  if (s === 'skip')    return '<span class="badge bs">ไม่ว่าง/ข้าม</span>';
+  if (s === 'away')    return '<span class="badge baway">ไม่ว่างยาว</span>';
   return '';
 }
 
@@ -287,10 +295,9 @@ function render() {
     var rb = p.role === 'operator'
       ? '<span class="role-op">Operator</span>'
       : '<span class="role-u">ทั่วไป</span>';
-    var opNote   = p.role === 'operator' ? '<span class="op-note">(ข้าม)</span>' : '';
-    var awayNote = p.st === 'away' ? '<span class="away-note">ไม่ว่างยาว</span>' : '';
+    var opNote = p.role === 'operator' ? '<span class="op-note">(ข้าม)</span>' : '';
 
-    var canMove = p.st !== 'done' && p.st !== 'skip' && p.st !== 'away';
+    var canMove = p.st === 'waiting' || p.st === 'active';
     var upDis   = (!canMove || i === 0) ? ' disabled' : '';
     var downDis = (!canMove || i === q.length - 1) ? ' disabled' : '';
 
@@ -303,24 +310,24 @@ function render() {
 
     var btns = '';
     if (p.st === 'active') {
-      btns += '<button class="xbtn c" onclick="done(' + p.id + ')">&#10003; เช็ค</button>';
-      btns += '<button class="xbtn s" onclick="skip(' + p.id + ')">&#10005; ไม่ว่าง</button>';
-      btns += '<button class="xbtn away" onclick="setAway(' + p.id + ')">&#128683; ไม่ว่างยาว</button>';
+      btns += '<button class="xbtn c" onclick="done(' + p.id + ')">เช็ค</button>';
+      btns += '<button class="xbtn s" onclick="skip(' + p.id + ')">ไม่ว่าง</button>';
+      btns += '<button class="xbtn away" onclick="setAway(' + p.id + ')">ไม่ว่างยาว</button>';
     } else if (p.st === 'waiting') {
-      btns += '<button class="xbtn s" onclick="skip(' + p.id + ')">&#10005; ไม่ว่าง</button>';
-      btns += '<button class="xbtn away" onclick="setAway(' + p.id + ')">&#128683; ไม่ว่างยาว</button>';
+      btns += '<button class="xbtn s" onclick="skip(' + p.id + ')">ไม่ว่าง</button>';
+      btns += '<button class="xbtn away" onclick="setAway(' + p.id + ')">ไม่ว่างยาว</button>';
     } else if (p.st === 'skip') {
-      btns += '<button class="xbtn c" onclick="done(' + p.id + ')">&#10003; เสร็จแล้ว</button>';
-      btns += '<button class="xbtn away" onclick="setAway(' + p.id + ')">&#128683; ไม่ว่างยาว</button>';
+      btns += '<button class="xbtn c" onclick="done(' + p.id + ')">เสร็จแล้ว</button>';
+      btns += '<button class="xbtn away" onclick="setAway(' + p.id + ')">ไม่ว่างยาว</button>';
     } else if (p.st === 'away') {
-      btns += '<button class="xbtn c" onclick="backToQueue(' + p.id + ')">&#8617; กลับเข้าคิว</button>';
+      btns += '<button class="xbtn back" onclick="backToQueue(' + p.id + ')">กลับเข้าคิว</button>';
     }
     btns += '<button class="xbtn d" onclick="del(' + p.id + ')">ลบ</button>';
 
     var numD = isOut(p.st) ? '&mdash;' : n;
     rows += '<tr class="' + rc + '">'
       + '<td class="num">' + numD + '</td>'
-      + '<td><span class="name-cell">' + p.name + '</span>' + opNote + awayNote + '</td>'
+      + '<td><span class="name-cell">' + p.name + '</span>' + opNote + '</td>'
       + '<td>' + rb + '</td>'
       + '<td>' + sLabel(p.st) + '</td>'
       + '<td><div class="acts">' + arrows + '<div class="sep"></div>' + btns + '</div></td>'
@@ -328,22 +335,24 @@ function render() {
   }
   tb.innerHTML = rows;
 
-  var w = 0, d = 0, s = 0, a = 0;
+  var cntW = 0, cntD = 0, cntS = 0, cntA = 0;
   for (var i = 0; i < q.length; i++) {
-    if (q[i].st === 'waiting') w++;
-    else if (q[i].st === 'done') d++;
-    else if (q[i].st === 'skip') s++;
-    else if (q[i].st === 'away') a++;
+    if      (q[i].st === 'waiting') cntW++;
+    else if (q[i].st === 'done')    cntD++;
+    else if (q[i].st === 'skip')    cntS++;
+    else if (q[i].st === 'away')    cntA++;
   }
   document.getElementById('stats').innerHTML =
-    '<div class="stat">รอ: <b>' + w + '</b></div>' +
-    '<div class="stat">เสร็จ: <b>' + d + '</b></div>' +
-    '<div class="stat">ข้าม: <b>' + s + '</b></div>' +
-    '<div class="stat">ไม่ว่างยาว: <b>' + a + '</b></div>' +
+    '<div class="stat">รอ: <b>' + cntW + '</b></div>' +
+    '<div class="stat">เสร็จ: <b>' + cntD + '</b></div>' +
+    '<div class="stat">ข้าม: <b>' + cntS + '</b></div>' +
+    '<div class="stat">ไม่ว่างยาว: <b>' + cntA + '</b></div>' +
     '<div class="stat">ทั้งหมด: <b>' + q.length + '</b></div>';
 }
 
-document.getElementById('ni').addEventListener('keydown', function(e){ if (e.key === 'Enter') add(); });
+document.getElementById('ni').addEventListener('keydown', function(e){
+  if (e.key === 'Enter') add();
+});
 render();
 </script>
 </body>
