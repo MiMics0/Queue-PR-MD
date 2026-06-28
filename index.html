@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ระบบรันคิว</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1117;color:#e2e8f0;min-height:100vh;padding:2rem 1rem}
+  .wrap{max-width:760px;margin:0 auto}
+  h1{font-size:20px;font-weight:600;color:#f1f5f9;margin-bottom:1.5rem;letter-spacing:.3px}
+
+  .add-row{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+  .add-row input{flex:1;min-width:140px;height:38px;padding:0 12px;border:1px solid #2d3748;border-radius:8px;font-size:14px;background:#1a1f2e;color:#e2e8f0;outline:none;transition:border-color .15s}
+  .add-row input:focus{border-color:#3b82f6}
+  .add-row input::placeholder{color:#475569}
+  .add-row select{height:38px;padding:0 10px;border:1px solid #2d3748;border-radius:8px;font-size:13px;background:#1a1f2e;color:#e2e8f0;cursor:pointer}
+  .add-row select:focus{outline:none;border-color:#3b82f6}
+  .abtn{height:38px;padding:0 16px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#3b82f6;color:#fff;transition:background .15s}
+  .abtn:hover{background:#2563eb}
+
+  .stats{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap}
+  .stat{background:#1a1f2e;border:1px solid #2d3748;border-radius:8px;padding:6px 14px;font-size:12px;color:#64748b}
+  .stat b{color:#cbd5e1;font-weight:600}
+
+  .tbl-wrap{border:1px solid #2d3748;border-radius:12px;overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{background:#151820;color:#475569;font-weight:600;font-size:11px;padding:10px 14px;text-align:left;border-bottom:1px solid #2d3748;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid #1e2433;color:#cbd5e1;vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr.r-active td{background:#0f2040}
+  tr.r-done td{opacity:.35}
+  tr.r-busy td{background:#1f1608}
+
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+  .bw{background:#1e2433;color:#64748b;border:1px solid #2d3748}
+  .ba{background:#1e3a5f;color:#60a5fa}
+  .bd{background:#14311a;color:#4ade80}
+  .bb{background:#2d1f00;color:#fbbf24}
+
+  .role-op{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;background:#2d1f4e;color:#a78bfa}
+  .role-u{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;background:#1e2433;color:#64748b;border:1px solid #2d3748}
+
+  .acts{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+
+  /* ปุ่มลูกศรเลื่อนคิว */
+  .move-col{display:flex;flex-direction:column;gap:2px;margin-right:4px}
+  .mbtn{width:22px;height:19px;padding:0;font-size:10px;border:1px solid #2d3748;border-radius:5px;background:#1a1f2e;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .1s,color .1s,border-color .1s}
+  .mbtn:hover:not(:disabled){background:#252d3d;color:#94a3b8;border-color:#3d4f6b}
+  .mbtn:disabled{opacity:.18;cursor:default}
+  .sep{width:1px;height:20px;background:#2d3748;margin:0 2px;flex-shrink:0}
+
+  .xbtn{height:27px;padding:0 10px;font-size:11px;font-weight:600;border:1px solid #2d3748;border-radius:7px;background:#1a1f2e;color:#cbd5e1;cursor:pointer;white-space:nowrap;transition:background .12s,border-color .12s}
+  .xbtn:hover{background:#252d3d;border-color:#3d4f6b}
+  .xbtn.c{background:#14311a;color:#4ade80;border-color:#166534}
+  .xbtn.c:hover{background:#166534}
+  .xbtn.s{background:#2d1f00;color:#fbbf24;border-color:#78350f}
+  .xbtn.s:hover{background:#78350f}
+  .xbtn.d{color:#f87171;border-color:#450a0a}
+  .xbtn.d:hover{background:#1f0a0a}
+
+  .num{font-weight:600;color:#374151;font-size:12px}
+  .name-cell{font-weight:500;color:#e2e8f0}
+  .op-note{font-size:10px;color:#374151;margin-left:5px}
+
+  .bot{display:flex;justify-content:flex-end;margin-top:.85rem}
+  .rbtn{height:30px;padding:0 14px;font-size:12px;border:1px solid #2d3748;border-radius:8px;background:#1a1f2e;color:#64748b;cursor:pointer;transition:background .12s}
+  .rbtn:hover{background:#252d3d;color:#94a3b8}
+
+  .empty{text-align:center;padding:2.5rem;color:#374151;font-size:13px}
+
+  .toast{position:fixed;bottom:1.75rem;left:50%;transform:translateX(-50%);background:#14311a;color:#4ade80;border:1px solid #166534;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap}
+  .toast.show{opacity:1}
+
+  .round-badge{display:inline-block;margin-left:8px;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;background:#1e3a5f;color:#60a5fa;vertical-align:middle}
+
+  @media(max-width:540px){
+    body{padding:1rem .5rem}
+    th:nth-child(3),td:nth-child(3){display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>ระบบรันคิว <span id="roundLabel"></span></h1>
+
+  <div class="add-row">
+    <input type="text" id="ni" placeholder="ชื่อผู้เข้าคิว..." maxlength="30"/>
+    <select id="rs">
+      <option value="user">ทั่วไป</option>
+      <option value="operator">Operator</option>
+    </select>
+    <button class="abtn" onclick="add()">+ เพิ่มคิว</button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:36px">#</th>
+          <th>ชื่อ</th>
+          <th style="width:95px">ตำแหน่ง</th>
+          <th style="width:120px">สถานะ</th>
+          <th>จัดการ</th>
+        </tr>
+      </thead>
+      <tbody id="qb"></tbody>
+    </table>
+    <div class="empty" id="em" style="display:none">ยังไม่มีคิว — เพิ่มชื่อด้านบนได้เลย</div>
+  </div>
+
+  <div class="bot">
+    <button class="rbtn" onclick="hardReset()">รีเซ็ตและล้างรายชื่อ</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let q = [
+  {id:1, name:'สมชาย',  role:'user',     st:'waiting'},
+  {id:2, name:'สมหญิง', role:'operator', st:'waiting'},
+  {id:3, name:'วิชัย',  role:'user',     st:'waiting'},
+  {id:4, name:'นภา',    role:'user',     st:'waiting'},
+];
+let nid = 5, round = 1;
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function allFinished() {
+  return q.length > 0 && q.every(p => p.st === 'done' || p.st === 'busy');
+}
+
+function softReset() {
+  round++;
+  q = q.map(p => ({...p, st:'waiting'}));
+  ensureActive();
+  showToast('รอบที่ ' + round + ' เริ่มแล้ว — กดเช็คใหม่ได้เลย');
+  render();
+}
+
+function hardReset() { q = []; nid = 1; round = 1; render(); }
+
+function actIdx() { return q.findIndex(p => p.st === 'active'); }
+
+function ensureActive() {
+  if (actIdx() === -1) {
+    const n = q.findIndex(p => p.st === 'waiting');
+    if (n !== -1) q[n].st = 'active';
+  }
+}
+
+function nextWaiting() {
+  const c = actIdx(), s = c === -1 ? 0 : c + 1;
+  for (let i = s; i < q.length; i++) if (q[i].st === 'waiting') return i;
+  return -1;
+}
+
+function add() {
+  const inp = document.getElementById('ni');
+  const role = document.getElementById('rs').value;
+  const name = inp.value.trim();
+  if (!name) { inp.focus(); return; }
+  q.push({id: nid++, name, role, st:'waiting'});
+  inp.value = '';
+  ensureActive(); render();
+}
+
+function done(id) {
+  const p = q.find(x => x.id === id); if (!p) return;
+  p.st = 'done';
+  const n = nextWaiting();
+  if (n !== -1) q[n].st = 'active';
+  if (allFinished()) setTimeout(softReset, 600); else render();
+}
+
+function busy(id) {
+  const p = q.find(x => x.id === id); if (!p) return;
+  const wasA = p.st === 'active';
+  p.st = 'busy';
+  if (wasA) { const n = nextWaiting(); if (n !== -1) q[n].st = 'active'; }
+  if (allFinished()) setTimeout(softReset, 600); else render();
+}
+
+function del(id) {
+  const i = q.findIndex(x => x.id === id);
+  const wasA = q[i]?.st === 'active';
+  q.splice(i, 1);
+  if (wasA) { const n = q.findIndex(p => p.st === 'waiting'); if (n !== -1) q[n].st = 'active'; }
+  render();
+}
+
+function moveUp(id) {
+  const i = q.findIndex(x => x.id === id);
+  if (i <= 0) return;
+  [q[i-1], q[i]] = [q[i], q[i-1]];
+  // fix active: first waiting in new order becomes active
+  const curAct = q.find(p => p.st === 'active');
+  if (!curAct) ensureActive();
+  render();
+}
+
+function moveDown(id) {
+  const i = q.findIndex(x => x.id === id);
+  if (i >= q.length - 1) return;
+  [q[i], q[i+1]] = [q[i+1], q[i]];
+  const curAct = q.find(p => p.st === 'active');
+  if (!curAct) ensureActive();
+  render();
+}
+
+function sLabel(s) {
+  if (s === 'waiting') return '<span class="badge bw">รอ</span>';
+  if (s === 'active')  return '<span class="badge ba">กำลังดำเนิน</span>';
+  if (s === 'done')    return '<span class="badge bd">เสร็จแล้ว</span>';
+  if (s === 'busy')    return '<span class="badge bb">ไม่ว่าง / ข้าม</span>';
+  return '';
+}
+
+function render() {
+  ensureActive();
+  const tb = document.getElementById('qb');
+  const em = document.getElementById('em');
+  document.getElementById('roundLabel').innerHTML = round > 1
+    ? '<span class="round-badge">รอบที่ ' + round + '</span>' : '';
+
+  if (q.length === 0) { tb.innerHTML = ''; em.style.display = 'block'; return; }
+  em.style.display = 'none';
+
+  let n = 0;
+  tb.innerHTML = q.map((p, i) => {
+    if (p.st === 'waiting' || p.st === 'active') n++;
+    const rc = p.st === 'active' ? 'r-active' : p.st === 'done' ? 'r-done' : p.st === 'busy' ? 'r-busy' : '';
+    const rb = p.role === 'operator'
+      ? '<span class="role-op">Operator</span>'
+      : '<span class="role-u">ทั่วไป</span>';
+    const opNote = p.role === 'operator' ? '<span class="op-note">(ข้าม)</span>' : '';
+
+    // ปุ่มลูกศร — ซ่อนถ้า done/busy เพราะเรียงไม่มีความหมาย
+    const canMove = p.st !== 'done' && p.st !== 'busy';
+    const upDis   = (!canMove || i === 0) ? 'disabled' : '';
+    const downDis = (!canMove || i === q.length - 1) ? 'disabled' : '';
+    const arrows = `<div class="move-col">
+      <button class="mbtn" onclick="moveUp(${p.id})" ${upDis} title="เลื่อนขึ้น">▲</button>
+      <button class="mbtn" onclick="moveDown(${p.id})" ${downDis} title="เลื่อนลง">▼</button>
+    </div>`;
+
+    let btns = '';
+    if (p.st === 'active') {
+      btns += `<button class="xbtn c" onclick="done(${p.id})">✓ เช็ค</button>`;
+      btns += `<button class="xbtn s" onclick="busy(${p.id})">✕ ไม่ว่าง</button>`;
+    } else if (p.st === 'waiting') {
+      btns += `<button class="xbtn s" onclick="busy(${p.id})">✕ ไม่ว่าง</button>`;
+    } else if (p.st === 'busy') {
+      btns += `<button class="xbtn c" onclick="done(${p.id})">✓ เสร็จแล้ว</button>`;
+    }
+    btns += `<button class="xbtn d" onclick="del(${p.id})">ลบ</button>`;
+
+    const numD = (p.st === 'done' || p.st === 'busy') ? '—' : n;
+    return `<tr class="${rc}">
+      <td class="num">${numD}</td>
+      <td><span class="name-cell">${p.name}</span>${opNote}</td>
+      <td>${rb}</td>
+      <td>${sLabel(p.st)}</td>
+      <td><div class="acts">${arrows}<div class="sep"></div>${btns}</div></td>
+    </tr>`;
+  }).join('');
+
+  const w = q.filter(p => p.st === 'waiting').length;
+  const d = q.filter(p => p.st === 'done').length;
+  const b = q.filter(p => p.st === 'busy').length;
+  document.getElementById('stats').innerHTML =
+    `<div class="stat">รอ: <b>${w}</b></div>` +
+    `<div class="stat">เสร็จ: <b>${d}</b></div>` +
+    `<div class="stat">ไม่ว่าง/ข้าม: <b>${b}</b></div>` +
+    `<div class="stat">ทั้งหมด: <b>${q.length}</b></div>`;
+}
+
+document.getElementById('ni').addEventListener('keydown', e => { if (e.key === 'Enter') add(); });
+render();
+</script>
+</body>
+</html>
