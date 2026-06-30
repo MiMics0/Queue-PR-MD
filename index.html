@@ -10,40 +10,87 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1117;color:#e2e8f0;min-height:100vh;padding:1.5rem 1rem}
-.wrap{max-width:820px;margin:0 auto}
-h1{font-size:20px;font-weight:600;color:#f1f5f9;margin-bottom:1.25rem}
-.tabs{display:flex;gap:4px;margin-bottom:1.25rem;border-bottom:1px solid #2d3748;padding-bottom:0}
+.wrap{max-width:860px;margin:0 auto}
+h1{font-size:20px;font-weight:600;color:#f1f5f9;margin-bottom:1.25rem;display:flex;align-items:center;gap:10px}
+.conn-dot{width:8px;height:8px;border-radius:50%;background:#374151;flex-shrink:0;transition:background .3s}
+.conn-dot.online{background:#4ade80}
+.conn-dot.offline{background:#f87171}
+.tabs{display:flex;gap:4px;margin-bottom:1.25rem;border-bottom:1px solid #2d3748}
 .tab{height:34px;padding:0 18px;font-size:13px;font-weight:600;border:none;background:none;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
 .tab.active{color:#60a5fa;border-bottom-color:#60a5fa}
 .tab:hover:not(.active){color:#94a3b8}
 .panel{display:none}.panel.active{display:block}
+
+/* members */
 .member-add{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
-.member-add input{flex:1;min-width:140px;height:36px;padding:0 12px;border:1px solid #2d3748;border-radius:8px;font-size:14px;background:#1a1f2e;color:#e2e8f0;outline:none}
+.member-add input{flex:1;min-width:130px;height:36px;padding:0 12px;border:1px solid #2d3748;border-radius:8px;font-size:14px;background:#1a1f2e;color:#e2e8f0;outline:none}
 .member-add input:focus{border-color:#3b82f6}
 .member-add input::placeholder{color:#475569}
 .member-add select{height:36px;padding:0 10px;border:1px solid #2d3748;border-radius:8px;font-size:13px;background:#1a1f2e;color:#e2e8f0}
 .abtn{height:36px;padding:0 14px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#3b82f6;color:#fff}
 .abtn:hover{background:#2563eb}
+.filter-row{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.fbtn{height:28px;padding:0 12px;font-size:12px;font-weight:600;border-radius:8px;border:1px solid #2d3748;background:#1a1f2e;color:#64748b;cursor:pointer}
+.fbtn.af{border-color:#3b82f6;color:#60a5fa;background:#0f2040}
+.fbtn.af-d{border-color:#f59e0b;color:#fbbf24;background:#2d1f00}
+.fbtn.af-c{border-color:#10b981;color:#34d399;background:#052e16}
+.member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px}
+.mcard{position:relative;padding:10px 12px;border-radius:10px;border:1.5px solid #2d3748;background:#1a1f2e;user-select:none}
+.mcard.inq{border-color:#3b82f6;background:#0f2040}
+.mcard.inq .mc-name{color:#60a5fa}
+.mcard.isaway{border-color:#6b21a8;background:#1e0f2a;opacity:.6}
+.mc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:4px;margin-bottom:5px}
+.mc-name{font-size:13px;font-weight:600;color:#e2e8f0;line-height:1.3;flex:1}
+.mc-del{background:none;border:none;color:#374151;cursor:pointer;font-size:12px;padding:0;line-height:1;flex-shrink:0}
+.mc-del:hover{color:#f87171}
+.mc-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;align-items:center}
+.mc-role{font-size:10px;font-weight:600;padding:1px 7px;border-radius:10px;display:inline-block}
+.mc-role.op{background:#2d1f4e;color:#a78bfa}
+.mc-role.user{background:#1e2433;color:#64748b;border:1px solid #2d3748}
+.mc-hosp{font-size:10px;font-weight:600;padding:1px 7px;border-radius:10px;display:inline-block;cursor:pointer}
+.mc-hosp.desert{background:#2d1f00;color:#fbbf24;border:1px solid #78350f}
+.mc-hosp.city{background:#052e16;color:#34d399;border:1px solid #065f46}
+.mc-hosp.none{background:#1e2433;color:#475569;border:1px solid #2d3748}
+.mc-st{font-size:10px;color:#64748b;margin-bottom:5px}
+.mc-st.act{color:#60a5fa}
+.mc-st.aw{color:#a78bfa}
+.mc-qbtn{width:100%;height:24px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid #2d3748;background:#1a1f2e;color:#cbd5e1;cursor:pointer}
+.mc-qbtn:hover{background:#252d3d}
+.mc-qbtn.inq{background:#0f2040;color:#60a5fa;border-color:#1e3a5f}
+.mc-qbtn:disabled{opacity:.3;cursor:default;pointer-events:none}
+.hint{font-size:12px;color:#475569;margin-bottom:1rem}
+.empty-g{text-align:center;padding:2rem;color:#374151;font-size:13px}
+
+/* queue table */
 .stats{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap}
 .stat{background:#1a1f2e;border:1px solid #2d3748;border-radius:8px;padding:5px 12px;font-size:12px;color:#64748b}
 .stat b{color:#cbd5e1;font-weight:600}
 .tbl-wrap{border:1px solid #2d3748;border-radius:12px;overflow:hidden}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{background:#151820;color:#475569;font-weight:600;font-size:11px;padding:9px 13px;text-align:left;border-bottom:1px solid #2d3748;text-transform:uppercase;letter-spacing:.5px}
-td{padding:9px 13px;border-bottom:1px solid #1e2433;color:#cbd5e1;vertical-align:middle}
+td{padding:8px 13px;border-bottom:1px solid #1e2433;color:#cbd5e1;vertical-align:middle}
 tr:last-child td{border-bottom:none}
-tr.row-active td{background:#0f2040}
-tr.row-done td{opacity:.35}
-tr.row-skip td{background:#251800}
-tr.row-away td{background:#1e0f2a}
+tr.ra td{background:#0f2040}
+tr.rd td{opacity:.35}
+tr.rs td{background:#251800}
+tr.rw td{background:#1e0f2a}
 .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;line-height:1.4}
-.badge-wait{background:#1e2433;color:#64748b;border:1px solid #2d3748}
-.badge-active{background:#1e3a5f;color:#60a5fa}
-.badge-done{background:#14311a;color:#4ade80}
-.badge-skip{background:#2d1f00;color:#fbbf24}
-.badge-away{background:#2d1030;color:#c084fc;border:1px solid #6b21a8}
+.bwait{background:#1e2433;color:#64748b;border:1px solid #2d3748}
+.bact{background:#1e3a5f;color:#60a5fa}
+.bdone{background:#14311a;color:#4ade80}
+.bskip{background:#2d1f00;color:#fbbf24}
+.baway{background:#2d1030;color:#c084fc;border:1px solid #6b21a8}
+.hosp-tag{font-size:10px;font-weight:600;padding:1px 7px;border-radius:10px;display:inline-block;margin-left:4px;vertical-align:middle}
+.hosp-tag.desert{background:#2d1f00;color:#fbbf24}
+.hosp-tag.city{background:#052e16;color:#34d399}
 .role-op{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;background:#2d1f4e;color:#a78bfa}
 .role-user{font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px;background:#1e2433;color:#64748b;border:1px solid #2d3748}
+
+/* hosp dropdown in table */
+.hosp-sel{height:24px;font-size:11px;font-weight:600;border-radius:7px;border:1px solid #2d3748;background:#1a1f2e;color:#cbd5e1;cursor:pointer;padding:0 6px}
+.hosp-sel.desert{background:#2d1f00;color:#fbbf24;border-color:#78350f}
+.hosp-sel.city{background:#052e16;color:#34d399;border-color:#065f46}
+
 .acts{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
 .move-col{display:flex;flex-direction:column;gap:2px;margin-right:2px}
 .mbtn{width:24px;height:20px;padding:0;border:1px solid #2d3748;border-radius:5px;background:#1a1f2e;color:#94a3b8;cursor:pointer;font-size:10px;line-height:1;display:flex;align-items:center;justify-content:center}
@@ -52,19 +99,13 @@ tr.row-away td{background:#1e0f2a}
 .sep{width:1px;height:20px;background:#2d3748;margin:0 3px;flex-shrink:0}
 .xbtn{height:27px;padding:0 10px;font-size:11px;font-weight:600;border-radius:7px;cursor:pointer;white-space:nowrap;border:1px solid #2d3748;background:#1a1f2e;color:#cbd5e1}
 .xbtn:hover{background:#252d3d}
-.xbtn-check{background:#14311a;color:#4ade80;border-color:#166534}
-.xbtn-check:hover{background:#166534}
-.xbtn-skip{background:#2d1f00;color:#fbbf24;border-color:#78350f}
-.xbtn-skip:hover{background:#78350f}
-.xbtn-away{background:#2d1030;color:#c084fc;border-color:#6b21a8}
-.xbtn-away:hover{background:#3b0764}
-.xbtn-back{background:#1e2433;color:#94a3b8;border-color:#3d4f6b}
-.xbtn-back:hover{background:#252d3d}
-.xbtn-del{color:#f87171;border-color:#450a0a;background:#1a1f2e}
-.xbtn-del:hover{background:#1f0a0a}
+.xbtn-check{background:#14311a;color:#4ade80;border-color:#166534}.xbtn-check:hover{background:#166534}
+.xbtn-skip{background:#2d1f00;color:#fbbf24;border-color:#78350f}.xbtn-skip:hover{background:#78350f}
+.xbtn-away{background:#2d1030;color:#c084fc;border-color:#6b21a8}.xbtn-away:hover{background:#3b0764}
+.xbtn-back{background:#1e2433;color:#94a3b8;border-color:#3d4f6b}.xbtn-back:hover{background:#252d3d}
+.xbtn-del{color:#f87171;border-color:#450a0a;background:#1a1f2e}.xbtn-del:hover{background:#1f0a0a}
 .num{font-weight:600;color:#374151;font-size:12px}
 .name-txt{font-weight:500;color:#e2e8f0}
-.op-note{font-size:10px;color:#374151;margin-left:5px}
 .bot{display:flex;justify-content:flex-end;margin-top:.85rem}
 .rbtn{height:30px;padding:0 14px;font-size:12px;border:1px solid #2d3748;border-radius:8px;background:#1a1f2e;color:#64748b;cursor:pointer}
 .rbtn:hover{background:#252d3d;color:#94a3b8}
@@ -72,25 +113,6 @@ tr.row-away td{background:#1e0f2a}
 .toast{position:fixed;bottom:1.75rem;left:50%;transform:translateX(-50%);background:#14311a;color:#4ade80;border:1px solid #166534;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap}
 .toast.show{opacity:1}
 .round-badge{display:inline-block;margin-left:8px;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;background:#1e3a5f;color:#60a5fa;vertical-align:middle}
-.hint{font-size:12px;color:#475569;margin-bottom:1rem}
-.member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-.member-card{position:relative;padding:10px 12px;border-radius:10px;cursor:pointer;border:1.5px solid #2d3748;background:#1a1f2e;transition:border-color .15s,background .15s;user-select:none}
-.member-card:hover{border-color:#3d4f6b;background:#1e2535}
-.member-card.in-queue{border-color:#3b82f6;background:#0f2040}
-.member-card.in-queue .mc-name{color:#60a5fa}
-.member-card.is-away{border-color:#6b21a8;background:#1e0f2a;opacity:.6;cursor:default}
-.mc-name{font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:3px}
-.mc-role{font-size:10px;font-weight:600;padding:1px 7px;border-radius:10px;display:inline-block}
-.mc-role.op{background:#2d1f4e;color:#a78bfa}
-.mc-role.user{background:#1e2433;color:#64748b;border:1px solid #2d3748}
-.mc-status{font-size:10px;margin-top:4px;color:#64748b}
-.mc-status.active-st{color:#60a5fa}
-.mc-status.away-st{color:#a78bfa}
-.mc-del{position:absolute;top:6px;right:8px;background:none;border:none;color:#374151;cursor:pointer;font-size:13px;padding:0;line-height:1}
-.mc-del:hover{color:#f87171}
-.empty-members{text-align:center;padding:2rem;color:#374151;font-size:13px}
-.save-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#4ade80;margin-left:8px;vertical-align:middle;opacity:0;transition:opacity .3s}
-.save-dot.show{opacity:1}
 @media(max-width:540px){
   body{padding:1rem .5rem}
   th:nth-child(3),td:nth-child(3){display:none}
@@ -100,98 +122,136 @@ tr.row-away td{background:#1e0f2a}
 </head>
 <body>
 <div class="wrap">
-  <h1>ระบบรันคิว <span id="roundLabel"></span><span class="save-dot" id="saveDot"></span></h1>
+  <h1>ระบบรันคิว <span id="roundLabel"></span><span class="conn-dot" id="connDot" title="กำลังเชื่อมต่อ..."></span></h1>
   <div class="tabs">
     <button class="tab active" onclick="switchTab('queue')">คิว</button>
-    <button class="tab" onclick="switchTab('members')">จัดการรายชื่อ</button>
+    <button class="tab" onclick="switchTab('members')">รายชื่อ</button>
   </div>
 
-  <!-- QUEUE PANEL -->
+  <!-- QUEUE -->
   <div class="panel active" id="panel-queue">
-    <p class="hint">กดชื่อในหน้า "จัดการรายชื่อ" เพื่อเพิ่มเข้าคิว หรือเพิ่มชั่วคราวด้านล่าง</p>
-    <div class="member-add">
-      <input type="text" id="qni" placeholder="ชื่อชั่วคราว (ไม่บันทึก)..." maxlength="30"/>
-      <select id="qrs"><option value="user">ทั่วไป</option><option value="operator">Operator</option></select>
-      <button class="abtn" onclick="addTemp()">+ เพิ่มชั่วคราว</button>
-    </div>
     <div class="stats" id="stats"></div>
     <div class="tbl-wrap">
       <table>
         <thead><tr>
-          <th style="width:36px">#</th><th>ชื่อ</th>
-          <th style="width:95px">ตำแหน่ง</th>
+          <th style="width:36px">#</th>
+          <th>ชื่อ</th>
+          <th style="width:80px">ตำแหน่ง</th>
           <th style="width:130px">สถานะ</th>
           <th>จัดการ</th>
         </tr></thead>
         <tbody id="qb"></tbody>
       </table>
-      <div class="empty-q" id="em">ยังไม่มีคิว — ไปหน้า "จัดการรายชื่อ" แล้วกดชื่อเพื่อเพิ่ม</div>
+      <div class="empty-q" id="em">ยังไม่มีคิว — ไปหน้า "รายชื่อ" แล้วกดเพิ่มเข้าคิว</div>
     </div>
     <div class="bot"><button class="rbtn" onclick="hardReset()">รีเซ็ตและล้างคิว</button></div>
   </div>
 
-  <!-- MEMBERS PANEL -->
+  <!-- MEMBERS -->
   <div class="panel" id="panel-members">
     <div class="member-add">
-      <input type="text" id="mni" placeholder="ชื่อสมาชิก..." maxlength="30"/>
+      <input type="text" id="mni" placeholder="ชื่อสมาชิกใหม่..." maxlength="40"/>
       <select id="mrs"><option value="user">ทั่วไป</option><option value="operator">Operator</option></select>
-      <button class="abtn" onclick="addMember()">+ เพิ่มสมาชิก</button>
+      <button class="abtn" onclick="addMember()">+ เพิ่ม</button>
     </div>
-    <p class="hint">กดการ์ดเพื่อเพิ่ม/ถอดออกจากคิว — รายชื่อบันทึกอัตโนมัติในเครื่องนี้</p>
+    <div class="filter-row">
+      <span style="font-size:12px;color:#475569">กรอง:</span>
+      <button class="fbtn af" id="f-all" onclick="setFilter('all')">ทั้งหมด</button>
+      <button class="fbtn" id="f-desert" onclick="setFilter('desert')">ทะเลทราย</button>
+      <button class="fbtn" id="f-city" onclick="setFilter('city')">ในเมือง</button>
+      <button class="fbtn" id="f-none" onclick="setFilter('none')">ยังไม่ระบุ</button>
+    </div>
+    <p class="hint">กดป้ายโรงพยาบาลใต้ชื่อเพื่อสลับ — กดปุ่ม "เพิ่มคิว" เพื่อเพิ่มเข้ารันคิว</p>
     <div class="member-grid" id="memberGrid"></div>
-    <div class="empty-members" id="emMembers" style="display:none">ยังไม่มีสมาชิก</div>
+    <div class="empty-g" id="emMembers" style="display:none">ยังไม่มีสมาชิก</div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
 
-<script>
-var MKEY='queueapp_members';
-var QKEY='queueapp_queue';
-var NKEY='queueapp_nid';
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-/* ===== LOAD from localStorage ===== */
-function loadData(){
-  try{
-    var m=localStorage.getItem(MKEY);
-    var q=localStorage.getItem(QKEY);
-    var n=localStorage.getItem(NKEY);
-    members = m ? JSON.parse(m) : [
-      {id:1,name:'สมชาย', role:'user'},
-      {id:2,name:'สมหญิง',role:'operator'},
-      {id:3,name:'วิชัย', role:'user'},
-      {id:4,name:'นภา',   role:'user'}
-    ];
-    queue   = q ? JSON.parse(q) : [];
-    nid     = n ? parseInt(n,10) : 5;
-  } catch(e){
-    members=[]; queue=[]; nid=1;
+const firebaseConfig = {
+  apiKey: "AIzaSyC1PBBFAnqEStsjwcAlYA_qegoJ4wee2fw",
+  authDomain: "prmd-queue.firebaseapp.com",
+  databaseURL: "https://prmd-queue-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "prmd-queue",
+  storageBucket: "prmd-queue.firebasestorage.app",
+  messagingSenderId: "774169149959",
+  appId: "1:774169149959:web:d46c945abe6da01acf60a2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+/* ===== DEFAULT MEMBERS ===== */
+var DEFAULT_MEMBERS = [
+  'Maya Morgan','Junior Morgan','Meily Mao','Manem Morgan','Matcha Morgan',
+  'Jelatin Cloudwind','Noinaa Sabsab','Happy Hub','Haru Haru','Little Minii',
+  'Childpeach Morgan','Napapat NaAyutthaya','Ferrin Frozen','Varin Mekhaporn',
+  'Niran Asawamekha','Arty Akkeepong','Mark Eatcat','Naver Muhammad',
+  'Winliam Yoshida','Oshi Zenith','Mario Maurer','Somjoyy Eno'
+];
+
+/* ===== STATE ===== */
+var members = [];
+var queue   = [];
+var round   = 1;
+var qid     = 1000;
+var curFilter = 'all';
+var saving  = false;
+
+/* ===== CONNECTION DOT ===== */
+import { getDatabase as _gdb, ref as _ref, onValue as _onVal } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+onValue(ref(db,'.info/connected'), function(snap){
+  var dot = document.getElementById('connDot');
+  if(snap.val()){
+    dot.className='conn-dot online'; dot.title='เชื่อมต่อแล้ว';
+  } else {
+    dot.className='conn-dot offline'; dot.title='ออฟไลน์';
   }
+});
+
+/* ===== FIREBASE SYNC ===== */
+function saveAll(){
+  if(saving) return;
+  saving=true;
+  var data = { members: members, queue: queue, round: round, qid: qid };
+  set(ref(db,'prmd'), data).then(function(){ saving=false; }).catch(function(){ saving=false; });
 }
 
-/* ===== SAVE to localStorage ===== */
-function saveData(){
-  try{
-    localStorage.setItem(MKEY, JSON.stringify(members));
-    localStorage.setItem(QKEY, JSON.stringify(queue));
-    localStorage.setItem(NKEY, String(nid));
-    /* แสดง dot สีเขียวสั้นๆ */
-    var dot=document.getElementById('saveDot');
-    dot.classList.add('show');
-    setTimeout(function(){dot.classList.remove('show');},800);
-  } catch(e){}
-}
-
-var members=[], queue=[], nid=1, qid=100, round=1;
+/* listen realtime */
+onValue(ref(db,'prmd'), function(snap){
+  var val = snap.val();
+  if(!val){
+    /* first time — seed default members */
+    members = DEFAULT_MEMBERS.map(function(name,i){
+      return {id:i+1, name:name, role:'user', hosp:'none'};
+    });
+    queue=[]; round=1; qid=1000;
+    saveAll();
+  } else {
+    if(saving) return;
+    members = val.members || [];
+    queue   = val.queue   || [];
+    round   = val.round   || 1;
+    qid     = val.qid     || 1000;
+  }
+  renderQueue();
+  if(document.getElementById('panel-members').classList.contains('active')) renderMembers();
+});
 
 /* ===== TABS ===== */
-function switchTab(name){
+window.switchTab = function(name){
   var tabs=document.querySelectorAll('.tab');
   tabs[0].classList.toggle('active',name==='queue');
   tabs[1].classList.toggle('active',name==='members');
   document.getElementById('panel-queue').classList.toggle('active',name==='queue');
   document.getElementById('panel-members').classList.toggle('active',name==='members');
   if(name==='members') renderMembers();
-}
+};
 
 function showToast(msg){
   var t=document.getElementById('toast');
@@ -199,73 +259,100 @@ function showToast(msg){
   setTimeout(function(){t.classList.remove('show');},2400);
 }
 
-/* ===== MEMBERS ===== */
-function addMember(){
-  var inp=document.getElementById('mni'),role=document.getElementById('mrs').value;
-  var name=inp.value.trim(); if(!name){inp.focus();return;}
-  members.push({id:nid++,name:name,role:role});
-  inp.value=''; saveData(); renderMembers();
-}
+/* ===== FILTER ===== */
+window.setFilter = function(f){
+  curFilter=f;
+  ['all','desert','city','none'].forEach(function(id){
+    var el=document.getElementById('f-'+id);
+    var isActive=id===f;
+    el.className='fbtn'+(isActive?(' '+(id==='desert'?'af-d':id==='city'?'af-c':'af')):'');
+  });
+  renderMembers();
+};
 
-function deleteMember(mid){
+/* ===== HOSP CYCLE ===== */
+window.cycleHosp = function(mid, evt){
+  if(evt){evt.stopPropagation();}
+  var m=memberById(mid); if(!m) return;
+  var order=['none','desert','city'];
+  var cur=order.indexOf(m.hosp||'none');
+  m.hosp=order[(cur+1)%order.length];
+  saveAll(); renderMembers();
+};
+
+/* ===== MEMBERS ===== */
+window.addMember = function(){
+  var inp=document.getElementById('mni'), role=document.getElementById('mrs').value;
+  var name=inp.value.trim(); if(!name){inp.focus();return;}
+  var newId = Date.now();
+  members.push({id:newId, name:name, role:role, hosp:'none'});
+  inp.value=''; saveAll(); renderMembers();
+};
+
+window.deleteMember = function(mid, evt){
+  if(evt){evt.stopPropagation();}
   queue=queue.filter(function(q){return q.memberId!==mid;});
   members=members.filter(function(m){return m.id!==mid;});
-  ensureActive(); saveData(); renderMembers(); renderQueue();
-}
+  ensureActive(); saveAll(); renderMembers(); renderQueue();
+};
 
-function toggleMember(mid){
+window.toggleQueue = function(mid){
   var m=memberById(mid); if(!m) return;
-  var inQ=null;
-  for(var i=0;i<queue.length;i++) if(queue[i].memberId===mid){inQ=queue[i];break;}
+  var inQ=qEntryFor(mid);
   if(inQ){
     if(inQ.st==='away') return;
     var wasA=inQ.st==='active';
     queue=queue.filter(function(q){return q.memberId!==mid;});
     if(wasA){var n=nextWaiting();if(n!==-1)queue[n].st='active';}
-    if(allFinished()&&queue.length>0) setTimeout(softReset,600);
+    if(allFinished()&&queue.length>0){setTimeout(function(){softReset();},600);}
   } else {
-    queue.push({id:qid++,name:m.name,role:m.role,st:'waiting',memberId:mid});
+    queue.push({id:qid++, name:m.name, role:m.role, hosp:m.hosp||'none', st:'waiting', memberId:mid});
     ensureActive();
   }
-  saveData(); renderMembers(); renderQueue();
-}
+  saveAll(); renderMembers(); renderQueue();
+};
 
 function memberById(id){for(var i=0;i<members.length;i++) if(members[i].id===id) return members[i]; return null;}
+function qEntryFor(mid){for(var i=0;i<queue.length;i++) if(queue[i].memberId===mid) return queue[i]; return null;}
 
 function renderMembers(){
   var grid=document.getElementById('memberGrid');
   var em=document.getElementById('emMembers');
-  if(!members.length){grid.innerHTML='';em.style.display='block';return;}
+  var filtered=members.filter(function(m){
+    if(curFilter==='all') return true;
+    return (m.hosp||'none')===curFilter;
+  });
+  if(!filtered.length){grid.innerHTML='';em.style.display='block';return;}
   em.style.display='none';
-  grid.innerHTML=members.map(function(m){
-    var inQ=null;
-    for(var i=0;i<queue.length;i++) if(queue[i].memberId===m.id){inQ=queue[i];break;}
+  grid.innerHTML=filtered.map(function(m){
+    var inQ=qEntryFor(m.id);
     var st=inQ?inQ.st:'';
     var isAway=st==='away';
-    var cls='member-card'+(inQ&&!isAway?' in-queue':'')+(isAway?' is-away':'');
-    var stLabel='';
-    if(st==='active')  stLabel='<div class="mc-status active-st">กำลังดำเนิน</div>';
-    else if(st==='waiting') stLabel='<div class="mc-status">อยู่ในคิว</div>';
-    else if(st==='skip')    stLabel='<div class="mc-status">ไม่ว่าง/ข้าม</div>';
-    else if(st==='away')    stLabel='<div class="mc-status away-st">ไม่ว่างยาว</div>';
-    else if(st==='done')    stLabel='<div class="mc-status">เสร็จแล้ว</div>';
-    var roleHtml=m.role==='operator'?'<span class="mc-role op">Operator</span>':'<span class="mc-role user">ทั่วไป</span>';
-    var clickAttr=isAway?'':'onclick="toggleMember('+m.id+')"';
-    return '<div class="'+cls+'" '+clickAttr+'>'
-      +'<button class="mc-del" onclick="event.stopPropagation();deleteMember('+m.id+')">x</button>'
-      +'<div class="mc-name">'+m.name+'</div>'
-      +roleHtml+stLabel+'</div>';
+    var cls='mcard'+(inQ&&!isAway?' inq':'')+(isAway?' isaway':'');
+    var stTxt='';
+    if(st==='active')       stTxt='<div class="mc-st act">กำลังดำเนิน</div>';
+    else if(st==='waiting') stTxt='<div class="mc-st">อยู่ในคิว</div>';
+    else if(st==='skip')    stTxt='<div class="mc-st">ไม่ว่าง/ข้าม</div>';
+    else if(st==='away')    stTxt='<div class="mc-st aw">ไม่ว่างยาว</div>';
+    else if(st==='done')    stTxt='<div class="mc-st">เสร็จแล้ว</div>';
+    var rb=m.role==='operator'?'<span class="mc-role op">Operator</span>':'<span class="mc-role user">ทั่วไป</span>';
+    var hosp=m.hosp||'none';
+    var hospHtml='<span class="mc-hosp '+hosp+'" onclick="cycleHosp('+m.id+',event)">'
+      +(hosp==='desert'?'ทะเลทราย':hosp==='city'?'ในเมือง':'ยังไม่ระบุ')+'</span>';
+    var qLabel=inQ&&!isAway?'ถอดออก':'เพิ่มคิว';
+    var qCls='mc-qbtn'+(inQ&&!isAway?' inq':'');
+    var qDis=isAway?' disabled':'';
+    return '<div class="'+cls+'">'
+      +'<div class="mc-top"><span class="mc-name">'+m.name+'</span>'
+      +'<button class="mc-del" onclick="deleteMember('+m.id+',event)">x</button></div>'
+      +'<div class="mc-row">'+rb+hospHtml+'</div>'
+      +stTxt
+      +'<button class="'+qCls+'"'+qDis+' onclick="toggleQueue('+m.id+')">'+qLabel+'</button>'
+      +'</div>';
   }).join('');
 }
 
-/* ===== QUEUE ===== */
-function addTemp(){
-  var inp=document.getElementById('qni'),role=document.getElementById('qrs').value;
-  var name=inp.value.trim(); if(!name){inp.focus();return;}
-  queue.push({id:qid++,name:name,role:role,st:'waiting'});
-  inp.value=''; ensureActive(); saveData(); renderQueue(); renderMembers();
-}
-
+/* ===== QUEUE LOGIC ===== */
 function isOut(st){return st==='done'||st==='skip'||st==='away';}
 function allFinished(){
   if(!queue.length) return false;
@@ -275,13 +362,11 @@ function allFinished(){
 function softReset(){
   round++;
   for(var i=0;i<queue.length;i++) if(queue[i].st!=='away') queue[i].st='waiting';
-  ensureActive(); saveData();
+  ensureActive(); saveAll();
   showToast('รอบที่ '+round+' เริ่มแล้ว');
   renderQueue(); renderMembers();
 }
-function hardReset(){
-  queue=[]; round=1; saveData(); renderQueue(); renderMembers();
-}
+window.hardReset = function(){queue=[];round=1;saveAll();renderQueue();renderMembers();};
 function actIdx(){for(var i=0;i<queue.length;i++) if(queue[i].st==='active') return i; return -1;}
 function ensureActive(){
   if(actIdx()===-1)
@@ -295,57 +380,77 @@ function nextWaiting(){
 function byQId(id){for(var i=0;i<queue.length;i++) if(queue[i].id===id) return queue[i]; return null;}
 function idxOfQ(id){for(var i=0;i<queue.length;i++) if(queue[i].id===id) return i; return -1;}
 
-function checkDone(id){
+window.changeHosp = function(qItemId, val){
+  var p=byQId(qItemId); if(!p) return;
+  p.hosp=val;
+  /* sync back to member card too */
+  if(p.memberId){
+    var m=memberById(p.memberId);
+    if(m) m.hosp=val;
+  }
+  saveAll(); renderQueue(); renderMembers();
+};
+
+window.checkDone = function(id){
   var p=byQId(id); if(!p) return;
   p.st='done'; var n=nextWaiting(); if(n!==-1) queue[n].st='active';
-  saveData();
-  if(allFinished()) setTimeout(softReset,600); else{renderQueue();renderMembers();}
-}
-function doSkip(id){
+  saveAll();
+  if(allFinished()){setTimeout(function(){softReset();},600);} else{renderQueue();renderMembers();}
+};
+window.doSkip = function(id){
   var p=byQId(id); if(!p) return;
   var wasA=p.st==='active'; p.st='skip';
   if(wasA){var n=nextWaiting();if(n!==-1)queue[n].st='active';}
-  saveData();
-  if(allFinished()) setTimeout(softReset,600); else{renderQueue();renderMembers();}
-}
-function doAway(id){
+  saveAll();
+  if(allFinished()){setTimeout(function(){softReset();},600);} else{renderQueue();renderMembers();}
+};
+window.doAway = function(id){
   var p=byQId(id); if(!p) return;
   var wasA=p.st==='active'; p.st='away';
   if(wasA){var n=nextWaiting();if(n!==-1)queue[n].st='active';}
-  saveData();
-  if(allFinished()) setTimeout(softReset,600); else{renderQueue();renderMembers();}
-}
-function doBack(id){
+  saveAll();
+  if(allFinished()){setTimeout(function(){softReset();},600);} else{renderQueue();renderMembers();}
+};
+window.doBack = function(id){
   var p=byQId(id); if(!p) return;
-  p.st='waiting'; ensureActive(); saveData(); renderQueue(); renderMembers();
-}
-function doDelete(id){
+  p.st='waiting'; ensureActive(); saveAll(); renderQueue(); renderMembers();
+};
+window.doDelete = function(id){
   var i=idxOfQ(id); if(i===-1) return;
   var wasA=queue[i].st==='active'; queue.splice(i,1);
   if(wasA) for(var j=0;j<queue.length;j++) if(queue[j].st==='waiting'){queue[j].st='active';break;}
-  saveData(); renderQueue(); renderMembers();
-}
-function moveUp(id){
+  saveAll(); renderQueue(); renderMembers();
+};
+window.moveUp = function(id){
   var i=idxOfQ(id); if(i<=0) return;
-  var t=queue[i-1];queue[i-1]=queue[i];queue[i]=t; ensureActive(); saveData(); renderQueue();
-}
-function moveDown(id){
+  var t=queue[i-1];queue[i-1]=queue[i];queue[i]=t; ensureActive(); saveAll(); renderQueue();
+};
+window.moveDown = function(id){
   var i=idxOfQ(id); if(i===-1||i>=queue.length-1) return;
-  var t=queue[i+1];queue[i+1]=queue[i];queue[i]=t; ensureActive(); saveData(); renderQueue();
+  var t=queue[i+1];queue[i+1]=queue[i];queue[i]=t; ensureActive(); saveAll(); renderQueue();
+};
+
+function hospTagHtml(h, qItemId){
+  var opts=[
+    '<option value="none"'+(h==='none'?' selected':'')+'>ยังไม่ระบุ</option>',
+    '<option value="desert"'+(h==='desert'?' selected':'')+'>ทะเลทราย</option>',
+    '<option value="city"'+(h==='city'?' selected':'')+'>ในเมือง</option>'
+  ].join('');
+  return '<select class="hosp-sel '+(h||'none')+'" onchange="changeHosp('+qItemId+',this.value)">'+opts+'</select>';
 }
 
 function badgeHtml(st){
-  if(st==='waiting') return '<span class="badge badge-wait">รอ</span>';
-  if(st==='active')  return '<span class="badge badge-active">กำลังดำเนิน</span>';
-  if(st==='done')    return '<span class="badge badge-done">เสร็จแล้ว</span>';
-  if(st==='skip')    return '<span class="badge badge-skip">ไม่ว่าง/ข้าม</span>';
-  if(st==='away')    return '<span class="badge badge-away">ไม่ว่างยาว</span>';
+  if(st==='waiting') return '<span class="badge bwait">รอ</span>';
+  if(st==='active')  return '<span class="badge bact">กำลังดำเนิน</span>';
+  if(st==='done')    return '<span class="badge bdone">เสร็จแล้ว</span>';
+  if(st==='skip')    return '<span class="badge bskip">ไม่ว่าง/ข้าม</span>';
+  if(st==='away')    return '<span class="badge baway">ไม่ว่างยาว</span>';
   return '';
 }
 
 function renderQueue(){
   ensureActive();
-  var tb=document.getElementById('qb'),em=document.getElementById('em');
+  var tb=document.getElementById('qb'), em=document.getElementById('em');
   document.getElementById('roundLabel').innerHTML=round>1?'<span class="round-badge">รอบที่ '+round+'</span>':'';
   if(!queue.length){tb.innerHTML='';em.style.display='block';return;}
   em.style.display='none';
@@ -353,9 +458,8 @@ function renderQueue(){
   for(var i=0;i<queue.length;i++){
     var p=queue[i];
     if(p.st==='waiting'||p.st==='active') n++;
-    var rc=p.st==='active'?'row-active':p.st==='done'?'row-done':p.st==='skip'?'row-skip':p.st==='away'?'row-away':'';
+    var rc=p.st==='active'?'ra':p.st==='done'?'rd':p.st==='skip'?'rs':p.st==='away'?'rw':'';
     var rb=p.role==='operator'?'<span class="role-op">Operator</span>':'<span class="role-user">ทั่วไป</span>';
-    var opNote=p.role==='operator'?'<span class="op-note">(ข้าม)</span>':'';
     var canMove=p.st==='waiting'||p.st==='active';
     var upDis=(!canMove||i===0)?' disabled':'';
     var dnDis=(!canMove||i===queue.length-1)?' disabled':'';
@@ -381,10 +485,12 @@ function renderQueue(){
     var numD=isOut(p.st)?'-':n;
     rows+='<tr class="'+rc+'">'
       +'<td class="num">'+numD+'</td>'
-      +'<td><span class="name-txt">'+p.name+'</span>'+opNote+'</td>'
+      +'<td><span class="name-txt">'+p.name+'</span></td>'
       +'<td>'+rb+'</td>'
       +'<td>'+badgeHtml(p.st)+'</td>'
-      +'<td><div class="acts">'+arrows+'<div class="sep"></div>'+btns+'</div></td>'
+      +'<td><div class="acts">'+arrows+'<div class="sep"></div>'
+      +hospTagHtml(p.hosp||'none',p.id)
+      +'<div class="sep"></div>'+btns+'</div></td>'
       +'</tr>';
   }
   tb.innerHTML=rows;
@@ -401,12 +507,7 @@ function renderQueue(){
     '<div class="stat">ทั้งหมด: <b>'+queue.length+'</b></div>';
 }
 
-document.addEventListener('DOMContentLoaded',function(){
-  loadData();
-  renderQueue();
-  document.getElementById('qni').addEventListener('keydown',function(e){if(e.key==='Enter')addTemp();});
-  document.getElementById('mni').addEventListener('keydown',function(e){if(e.key==='Enter')addMember();});
-});
+document.getElementById('mni').addEventListener('keydown',function(e){if(e.key==='Enter')addMember();});
 </script>
 </body>
 </html>
