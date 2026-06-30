@@ -87,9 +87,10 @@ tr.rw td{background:#1e0f2a}
 .role-user{font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px;background:#1e2433;color:#64748b;border:1px solid #2d3748}
 
 /* hosp dropdown in table */
-.hosp-sel{height:24px;font-size:11px;font-weight:600;border-radius:7px;border:1px solid #2d3748;background:#1a1f2e;color:#cbd5e1;cursor:pointer;padding:0 6px}
+.hosp-sel,.role-sel{height:24px;font-size:11px;font-weight:600;border-radius:7px;border:1px solid #2d3748;background:#1a1f2e;color:#cbd5e1;cursor:pointer;padding:0 6px}
 .hosp-sel.desert{background:#2d1f00;color:#fbbf24;border-color:#78350f}
 .hosp-sel.city{background:#052e16;color:#34d399;border-color:#065f46}
+.role-sel.operator{background:#2d1f4e;color:#a78bfa;border-color:#6b21a8}
 
 .acts{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
 .move-col{display:flex;flex-direction:column;gap:2px;margin-right:2px}
@@ -136,7 +137,6 @@ tr.rw td{background:#1e0f2a}
         <thead><tr>
           <th style="width:36px">#</th>
           <th>ชื่อ</th>
-          <th style="width:80px">ตำแหน่ง</th>
           <th style="width:130px">สถานะ</th>
           <th>จัดการ</th>
         </tr></thead>
@@ -367,14 +367,24 @@ function softReset(){
   renderQueue(); renderMembers();
 }
 window.hardReset = function(){queue=[];round=1;saveAll();renderQueue();renderMembers();};
-function actIdx(){for(var i=0;i<queue.length;i++) if(queue[i].st==='active') return i; return -1;}
+function actIdx(){for(var i=0;i<queue.length;i++) if(queue[i].st==="active") return i; return -1;}
 function ensureActive(){
   if(actIdx()===-1)
-    for(var i=0;i<queue.length;i++) if(queue[i].st==='waiting'){queue[i].st='active';break;}
+    for(var i=0;i<queue.length;i++){
+      if(queue[i].st==="waiting"){
+        if(queue[i].role==="operator"){queue[i].st="skip";continue;}
+        queue[i].st="active";break;
+      }
+    }
 }
 function nextWaiting(){
   var c=actIdx(),s=c===-1?0:c+1;
-  for(var i=s;i<queue.length;i++) if(queue[i].st==='waiting') return i;
+  for(var i=s;i<queue.length;i++){
+    if(queue[i].st==="waiting"){
+      if(queue[i].role==="operator"){queue[i].st="skip";continue;}
+      return i;
+    }
+  }
   return -1;
 }
 function byQId(id){for(var i=0;i<queue.length;i++) if(queue[i].id===id) return queue[i]; return null;}
@@ -387,6 +397,28 @@ window.changeHosp = function(qItemId, val){
   if(p.memberId){
     var m=memberById(p.memberId);
     if(m) m.hosp=val;
+  }
+  saveAll(); renderQueue(); renderMembers();
+};
+
+window.changeRole = function(qItemId, val){
+  var p=byQId(qItemId); if(!p) return;
+  var wasActive=p.st==="active";
+  p.role=val;
+  if(p.memberId){
+    var m=memberById(p.memberId);
+    if(m) m.role=val;
+  }
+  /* ถ้าเปลี่ยนเป็น operator และกำลัง active อยู่ ให้ข้ามทันที */
+  if(val==="operator" && (p.st==="waiting"||p.st==="active")){
+    var wasA=p.st==="active";
+    p.st="skip";
+    if(wasA){var n=nextWaiting();if(n!==-1)queue[n].st="active";}
+    if(allFinished()){setTimeout(function(){softReset();},600);}
+  } else if(val==="user" && p.st==="skip"){
+    /* เปลี่ยนกลับเป็น user ให้กลับเข้าคิว */
+    p.st="waiting";
+    ensureActive();
   }
   saveAll(); renderQueue(); renderMembers();
 };
@@ -439,6 +471,14 @@ function hospTagHtml(h, qItemId){
   return '<select class="hosp-sel '+(h||'none')+'" onchange="changeHosp('+qItemId+',this.value)">'+opts+'</select>';
 }
 
+function roleSelHtml(r, qItemId){
+  var opts=[
+    '<option value="user"'+(r==='user'?' selected':'')+'>ทั่วไป</option>',
+    '<option value="operator"'+(r==='operator'?' selected':'')+'>Operator</option>'
+  ].join('');
+  return '<select class="role-sel '+(r||'user')+'" onchange="changeRole('+qItemId+',this.value)">'+opts+'</select>';
+}
+
 function badgeHtml(st){
   if(st==='waiting') return '<span class="badge bwait">รอ</span>';
   if(st==='active')  return '<span class="badge bact">กำลังดำเนิน</span>';
@@ -486,9 +526,9 @@ function renderQueue(){
     rows+='<tr class="'+rc+'">'
       +'<td class="num">'+numD+'</td>'
       +'<td><span class="name-txt">'+p.name+'</span></td>'
-      +'<td>'+rb+'</td>'
       +'<td>'+badgeHtml(p.st)+'</td>'
       +'<td><div class="acts">'+arrows+'<div class="sep"></div>'
+      +roleSelHtml(p.role||'user',p.id)
       +hospTagHtml(p.hosp||'none',p.id)
       +'<div class="sep"></div>'+btns+'</div></td>'
       +'</tr>';
