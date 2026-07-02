@@ -10,7 +10,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1117;color:#e2e8f0;min-height:100vh;padding:1.5rem 1rem}
-.wrap{max-width:860px;margin:0 auto}
+.wrap{max-width:960px;margin:0 auto}
 h1{font-size:20px;font-weight:600;color:#f1f5f9;margin-bottom:1.25rem;display:flex;align-items:center;gap:10px}
 .conn-dot{width:8px;height:8px;border-radius:50%;background:#374151;flex-shrink:0;transition:background .3s}
 .conn-dot.online{background:#4ade80}
@@ -20,6 +20,65 @@ h1{font-size:20px;font-weight:600;color:#f1f5f9;margin-bottom:1.25rem;display:fl
 .tab.active{color:#60a5fa;border-bottom-color:#60a5fa}
 .tab:hover:not(.active){color:#94a3b8}
 .panel{display:none}.panel.active{display:block}
+
+/* queue layout */
+.queue-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+@media(max-width:700px){.queue-grid{grid-template-columns:1fr}}
+.q-section{}
+.q-title{font-size:13px;font-weight:700;margin-bottom:.6rem;display:flex;align-items:center;gap:6px}
+.q-title .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-desert{background:#fbbf24}
+.dot-city{background:#34d399}
+.stats-row{display:flex;gap:6px;margin-bottom:.75rem;flex-wrap:wrap}
+.stat{background:#1a1f2e;border:1px solid #2d3748;border-radius:8px;padding:4px 10px;font-size:11px;color:#64748b}
+.stat b{color:#cbd5e1;font-weight:600}
+.tbl-wrap{border:1px solid #2d3748;border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#151820;color:#475569;font-weight:600;font-size:10px;padding:8px 10px;text-align:left;border-bottom:1px solid #2d3748;text-transform:uppercase;letter-spacing:.5px}
+td{padding:8px 10px;border-bottom:1px solid #1e2433;color:#cbd5e1;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr.ra td{background:#0f2040}
+tr.rd td{opacity:.35}
+tr.rs td{background:#251800}
+tr.rw td{background:#1e0f2a}
+tr.rstory td{background:#0d1f2d}
+
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;line-height:1.4}
+.bwait{background:#1e2433;color:#64748b;border:1px solid #2d3748}
+.bact{background:#1e3a5f;color:#60a5fa}
+.bdone{background:#14311a;color:#4ade80}
+.bskip{background:#2d1f00;color:#fbbf24}
+.baway{background:#2d1030;color:#c084fc;border:1px solid #6b21a8}
+.bstory{background:#0d2535;color:#38bdf8;border:1px solid #0369a1}
+
+.hosp-sel,.role-sel{height:22px;font-size:10px;font-weight:600;border-radius:6px;border:1px solid #2d3748;background:#1a1f2e;color:#cbd5e1;cursor:pointer;padding:0 5px}
+.hosp-sel.desert{background:#2d1f00;color:#fbbf24;border-color:#78350f}
+.hosp-sel.city{background:#052e16;color:#34d399;border-color:#065f46}
+.role-sel.operator{background:#2d1f4e;color:#a78bfa;border-color:#6b21a8}
+
+.acts{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.move-col{display:flex;flex-direction:column;gap:2px;margin-right:1px}
+.mbtn{width:20px;height:18px;padding:0;border:1px solid #2d3748;border-radius:4px;background:#1a1f2e;color:#94a3b8;cursor:pointer;font-size:9px;line-height:1;display:flex;align-items:center;justify-content:center}
+.mbtn:hover{background:#252d3d}
+.mbtn:disabled{opacity:.2;cursor:default;pointer-events:none}
+.sep{width:1px;height:18px;background:#2d3748;margin:0 2px;flex-shrink:0}
+.xbtn{height:24px;padding:0 8px;font-size:10px;font-weight:600;border-radius:6px;cursor:pointer;white-space:nowrap;border:1px solid #2d3748;background:#1a1f2e;color:#cbd5e1}
+.xbtn:hover{background:#252d3d}
+.xbtn-check{background:#14311a;color:#4ade80;border-color:#166534}.xbtn-check:hover{background:#166534}
+.xbtn-skip{background:#2d1f00;color:#fbbf24;border-color:#78350f}.xbtn-skip:hover{background:#78350f}
+.xbtn-away{background:#2d1030;color:#c084fc;border-color:#6b21a8}.xbtn-away:hover{background:#3b0764}
+.xbtn-story{background:#0d2535;color:#38bdf8;border-color:#0369a1}.xbtn-story:hover{background:#075985}
+.xbtn-back{background:#1e2433;color:#94a3b8;border-color:#3d4f6b}.xbtn-back:hover{background:#252d3d}
+.xbtn-del{color:#f87171;border-color:#450a0a;background:#1a1f2e}.xbtn-del:hover{background:#1f0a0a}
+.num{font-weight:600;color:#374151;font-size:11px}
+.name-txt{font-weight:500;color:#e2e8f0;font-size:12px}
+.bot{display:flex;justify-content:flex-end;margin-top:.85rem}
+.rbtn{height:28px;padding:0 12px;font-size:11px;border:1px solid #2d3748;border-radius:8px;background:#1a1f2e;color:#64748b;cursor:pointer}
+.rbtn:hover{background:#252d3d;color:#94a3b8}
+.empty-q{text-align:center;padding:1.5rem;color:#374151;font-size:12px}
+.toast{position:fixed;bottom:1.75rem;left:50%;transform:translateX(-50%);background:#14311a;color:#4ade80;border:1px solid #166534;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast.show{opacity:1}
+.round-badge{display:inline-block;margin-left:8px;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;background:#1e3a5f;color:#60a5fa;vertical-align:middle}
 
 /* members */
 .member-add{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
@@ -39,6 +98,7 @@ h1{font-size:20px;font-weight:600;color:#f1f5f9;margin-bottom:1.25rem;display:fl
 .mcard.inq{border-color:#3b82f6;background:#0f2040}
 .mcard.inq .mc-name{color:#60a5fa}
 .mcard.isaway{border-color:#6b21a8;background:#1e0f2a;opacity:.6}
+.mcard.isstory{border-color:#0369a1;background:#0d2535;opacity:.7}
 .mc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:4px;margin-bottom:5px}
 .mc-name{font-size:13px;font-weight:600;color:#e2e8f0;line-height:1.3;flex:1}
 .mc-del{background:none;border:none;color:#374151;cursor:pointer;font-size:12px;padding:0;line-height:1;flex-shrink:0}
@@ -54,100 +114,66 @@ h1{font-size:20px;font-weight:600;color:#f1f5f9;margin-bottom:1.25rem;display:fl
 .mc-st{font-size:10px;color:#64748b;margin-bottom:5px}
 .mc-st.act{color:#60a5fa}
 .mc-st.aw{color:#a78bfa}
+.mc-st.story{color:#38bdf8}
 .mc-qbtn{width:100%;height:24px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid #2d3748;background:#1a1f2e;color:#cbd5e1;cursor:pointer}
 .mc-qbtn:hover{background:#252d3d}
 .mc-qbtn.inq{background:#0f2040;color:#60a5fa;border-color:#1e3a5f}
 .mc-qbtn:disabled{opacity:.3;cursor:default;pointer-events:none}
 .hint{font-size:12px;color:#475569;margin-bottom:1rem}
+.hosp-warn{font-size:11px;color:#f59e0b;margin-bottom:.5rem}
 .empty-g{text-align:center;padding:2rem;color:#374151;font-size:13px}
-
-/* queue table */
-.stats{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap}
-.stat{background:#1a1f2e;border:1px solid #2d3748;border-radius:8px;padding:5px 12px;font-size:12px;color:#64748b}
-.stat b{color:#cbd5e1;font-weight:600}
-.tbl-wrap{border:1px solid #2d3748;border-radius:12px;overflow:hidden}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:#151820;color:#475569;font-weight:600;font-size:11px;padding:9px 13px;text-align:left;border-bottom:1px solid #2d3748;text-transform:uppercase;letter-spacing:.5px}
-td{padding:8px 13px;border-bottom:1px solid #1e2433;color:#cbd5e1;vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr.ra td{background:#0f2040}
-tr.rd td{opacity:.35}
-tr.rs td{background:#251800}
-tr.rw td{background:#1e0f2a}
-.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;line-height:1.4}
-.bwait{background:#1e2433;color:#64748b;border:1px solid #2d3748}
-.bact{background:#1e3a5f;color:#60a5fa}
-.bdone{background:#14311a;color:#4ade80}
-.bskip{background:#2d1f00;color:#fbbf24}
-.baway{background:#2d1030;color:#c084fc;border:1px solid #6b21a8}
-.hosp-tag{font-size:10px;font-weight:600;padding:1px 7px;border-radius:10px;display:inline-block;margin-left:4px;vertical-align:middle}
-.hosp-tag.desert{background:#2d1f00;color:#fbbf24}
-.hosp-tag.city{background:#052e16;color:#34d399}
-.role-op{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;background:#2d1f4e;color:#a78bfa}
-.role-user{font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px;background:#1e2433;color:#64748b;border:1px solid #2d3748}
-
-/* hosp dropdown in table */
-.hosp-sel,.role-sel{height:24px;font-size:11px;font-weight:600;border-radius:7px;border:1px solid #2d3748;background:#1a1f2e;color:#cbd5e1;cursor:pointer;padding:0 6px}
-.hosp-sel.desert{background:#2d1f00;color:#fbbf24;border-color:#78350f}
-.hosp-sel.city{background:#052e16;color:#34d399;border-color:#065f46}
-.role-sel.operator{background:#2d1f4e;color:#a78bfa;border-color:#6b21a8}
-
-.acts{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
-.move-col{display:flex;flex-direction:column;gap:2px;margin-right:2px}
-.mbtn{width:24px;height:20px;padding:0;border:1px solid #2d3748;border-radius:5px;background:#1a1f2e;color:#94a3b8;cursor:pointer;font-size:10px;line-height:1;display:flex;align-items:center;justify-content:center}
-.mbtn:hover{background:#252d3d}
-.mbtn:disabled{opacity:.2;cursor:default;pointer-events:none}
-.sep{width:1px;height:20px;background:#2d3748;margin:0 3px;flex-shrink:0}
-.xbtn{height:27px;padding:0 10px;font-size:11px;font-weight:600;border-radius:7px;cursor:pointer;white-space:nowrap;border:1px solid #2d3748;background:#1a1f2e;color:#cbd5e1}
-.xbtn:hover{background:#252d3d}
-.xbtn-check{background:#14311a;color:#4ade80;border-color:#166534}.xbtn-check:hover{background:#166534}
-.xbtn-skip{background:#2d1f00;color:#fbbf24;border-color:#78350f}.xbtn-skip:hover{background:#78350f}
-.xbtn-away{background:#2d1030;color:#c084fc;border-color:#6b21a8}.xbtn-away:hover{background:#3b0764}
-.xbtn-back{background:#1e2433;color:#94a3b8;border-color:#3d4f6b}.xbtn-back:hover{background:#252d3d}
-.xbtn-del{color:#f87171;border-color:#450a0a;background:#1a1f2e}.xbtn-del:hover{background:#1f0a0a}
-.num{font-weight:600;color:#374151;font-size:12px}
-.name-txt{font-weight:500;color:#e2e8f0}
-.bot{display:flex;justify-content:flex-end;margin-top:.85rem}
-.rbtn{height:30px;padding:0 14px;font-size:12px;border:1px solid #2d3748;border-radius:8px;background:#1a1f2e;color:#64748b;cursor:pointer}
-.rbtn:hover{background:#252d3d;color:#94a3b8}
-.empty-q{text-align:center;padding:2.5rem;color:#374151;font-size:13px}
-.toast{position:fixed;bottom:1.75rem;left:50%;transform:translateX(-50%);background:#14311a;color:#4ade80;border:1px solid #166534;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap}
-.toast.show{opacity:1}
-.round-badge{display:inline-block;margin-left:8px;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;background:#1e3a5f;color:#60a5fa;vertical-align:middle}
-@media(max-width:540px){
-  body{padding:1rem .5rem}
-  th:nth-child(3),td:nth-child(3){display:none}
-  .member-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
-}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>ระบบรันคิว <span id="roundLabel"></span><span class="conn-dot" id="connDot" title="กำลังเชื่อมต่อ..."></span></h1>
+  <h1>ระบบรันคิว <span id="roundLabel"></span><span class="conn-dot" id="connDot"></span></h1>
   <div class="tabs">
     <button class="tab active" onclick="switchTab('queue')">คิว</button>
     <button class="tab" onclick="switchTab('members')">รายชื่อ</button>
   </div>
 
-  <!-- QUEUE -->
+  <!-- QUEUE PANEL -->
   <div class="panel active" id="panel-queue">
-    <div class="stats" id="stats"></div>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr>
-          <th style="width:36px">#</th>
-          <th>ชื่อ</th>
-          <th style="width:130px">สถานะ</th>
-          <th>จัดการ</th>
-        </tr></thead>
-        <tbody id="qb"></tbody>
-      </table>
-      <div class="empty-q" id="em">ยังไม่มีคิว — ไปหน้า "รายชื่อ" แล้วกดเพิ่มเข้าคิว</div>
+    <div class="queue-grid">
+      <!-- ในเมือง -->
+      <div class="q-section">
+        <div class="q-title"><span class="dot dot-city"></span>โรงพยาบาลในเมือง</div>
+        <div class="stats-row" id="stats-city"></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr>
+              <th style="width:28px">#</th>
+              <th>ชื่อ</th>
+              <th style="width:110px">สถานะ</th>
+              <th>จัดการ</th>
+            </tr></thead>
+            <tbody id="qb-city"></tbody>
+          </table>
+          <div class="empty-q" id="em-city">ยังไม่มีคิว</div>
+        </div>
+      </div>
+      <!-- ทะเลทราย -->
+      <div class="q-section">
+        <div class="q-title"><span class="dot dot-desert"></span>โรงพยาบาลทะเลทราย</div>
+        <div class="stats-row" id="stats-desert"></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr>
+              <th style="width:28px">#</th>
+              <th>ชื่อ</th>
+              <th style="width:110px">สถานะ</th>
+              <th>จัดการ</th>
+            </tr></thead>
+            <tbody id="qb-desert"></tbody>
+          </table>
+          <div class="empty-q" id="em-desert">ยังไม่มีคิว</div>
+        </div>
+      </div>
     </div>
     <div class="bot"><button class="rbtn" onclick="hardReset()">รีเซ็ตและล้างคิว</button></div>
   </div>
 
-  <!-- MEMBERS -->
+  <!-- MEMBERS PANEL -->
   <div class="panel" id="panel-members">
     <div class="member-add">
       <input type="text" id="mni" placeholder="ชื่อสมาชิกใหม่..." maxlength="40"/>
@@ -161,17 +187,16 @@ tr.rw td{background:#1e0f2a}
       <button class="fbtn" id="f-city" onclick="setFilter('city')">ในเมือง</button>
       <button class="fbtn" id="f-none" onclick="setFilter('none')">ยังไม่ระบุ</button>
     </div>
-    <p class="hint">กดป้ายโรงพยาบาลใต้ชื่อเพื่อสลับ — กดปุ่ม "เพิ่มคิว" เพื่อเพิ่มเข้ารันคิว</p>
+    <p class="hint">กดป้ายโรงพยาบาลเพื่อสลับ — ต้องระบุโรงพยาบาลก่อนถึงเพิ่มเข้าคิวได้</p>
     <div class="member-grid" id="memberGrid"></div>
     <div class="empty-g" id="emMembers" style="display:none">ยังไม่มีสมาชิก</div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
 
-<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC1PBBFAnqEStsjwcAlYA_qegoJ4wee2fw",
@@ -182,11 +207,9 @@ const firebaseConfig = {
   messagingSenderId: "774169149959",
   appId: "1:774169149959:web:d46c945abe6da01acf60a2"
 };
-
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
-/* ===== DEFAULT MEMBERS ===== */
 var DEFAULT_MEMBERS = [
   'Maya Morgan','Junior Morgan','Meily Mao','Manem Morgan','Matcha Morgan',
   'Jelatin Cloudwind','Noinaa Sabsab','Happy Hub','Haru Haru','Little Minii',
@@ -195,59 +218,45 @@ var DEFAULT_MEMBERS = [
   'Winliam Yoshida','Oshi Zenith','Mario Maurer','Somjoyy Eno'
 ];
 
-/* ===== STATE ===== */
-var members = [];
-var queue   = [];
-var round   = 1;
-var qid     = 1000;
-var curFilter = 'all';
-var saving  = false;
+var members=[], queue=[], round=1, qid=1000, curFilter='all', saving=false;
 
-/* ===== CONNECTION DOT ===== */
-import { getDatabase as _gdb, ref as _ref, onValue as _onVal } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+/* connection */
 onValue(ref(db,'.info/connected'), function(snap){
-  var dot = document.getElementById('connDot');
-  if(snap.val()){
-    dot.className='conn-dot online'; dot.title='เชื่อมต่อแล้ว';
-  } else {
-    dot.className='conn-dot offline'; dot.title='ออฟไลน์';
-  }
+  var dot=document.getElementById('connDot');
+  dot.className='conn-dot '+(snap.val()?'online':'offline');
 });
 
-/* ===== FIREBASE SYNC ===== */
+/* save */
 function saveAll(){
   if(saving) return;
   saving=true;
-  var data = { members: members, queue: queue, round: round, qid: qid };
-  set(ref(db,'prmd'), data).then(function(){ saving=false; }).catch(function(){ saving=false; });
+  set(ref(db,'prmd'),{members:members,queue:queue,round:round,qid:qid})
+    .then(function(){saving=false;}).catch(function(){saving=false;});
 }
 
-/* listen realtime */
+/* realtime listen */
 onValue(ref(db,'prmd'), function(snap){
-  var val = snap.val();
+  var val=snap.val();
   if(!val){
-    /* first time — seed default members */
-    members = DEFAULT_MEMBERS.map(function(name,i){
-      return {id:i+1, name:name, role:'user', hosp:'none'};
+    members=DEFAULT_MEMBERS.map(function(name,i){
+      return {id:i+1,name:name,role:'user',hosp:'none'};
     });
     queue=[]; round=1; qid=1000;
     saveAll();
   } else {
     if(saving) return;
-    members = val.members || [];
-    queue   = val.queue   || [];
-    round   = val.round   || 1;
-    qid     = val.qid     || 1000;
+    members=val.members||[];
+    queue=val.queue||[];
+    round=val.round||1;
+    qid=val.qid||1000;
   }
   renderQueue();
   if(document.getElementById('panel-members').classList.contains('active')) renderMembers();
 });
 
-/* ===== TABS ===== */
-window.switchTab = function(name){
-  var tabs=document.querySelectorAll('.tab');
-  tabs[0].classList.toggle('active',name==='queue');
-  tabs[1].classList.toggle('active',name==='members');
+/* tabs */
+window.switchTab=function(name){
+  document.querySelectorAll('.tab').forEach(function(t,i){t.classList.toggle('active',['queue','members'][i]===name);});
   document.getElementById('panel-queue').classList.toggle('active',name==='queue');
   document.getElementById('panel-members').classList.toggle('active',name==='members');
   if(name==='members') renderMembers();
@@ -259,250 +268,263 @@ function showToast(msg){
   setTimeout(function(){t.classList.remove('show');},2400);
 }
 
-/* ===== FILTER ===== */
-window.setFilter = function(f){
+/* filter */
+window.setFilter=function(f){
   curFilter=f;
   ['all','desert','city','none'].forEach(function(id){
     var el=document.getElementById('f-'+id);
-    var isActive=id===f;
-    el.className='fbtn'+(isActive?(' '+(id==='desert'?'af-d':id==='city'?'af-c':'af')):'');
+    el.className='fbtn'+(id===f?(' '+(id==='desert'?'af-d':id==='city'?'af-c':'af')):'');
   });
   renderMembers();
 };
 
-/* ===== HOSP CYCLE ===== */
-window.cycleHosp = function(mid, evt){
-  if(evt){evt.stopPropagation();}
+/* hosp cycle */
+window.cycleHosp=function(mid,evt){
+  if(evt) evt.stopPropagation();
   var m=memberById(mid); if(!m) return;
   var order=['none','desert','city'];
-  var cur=order.indexOf(m.hosp||'none');
-  m.hosp=order[(cur+1)%order.length];
+  m.hosp=order[(order.indexOf(m.hosp||'none')+1)%order.length];
   saveAll(); renderMembers();
 };
 
-/* ===== MEMBERS ===== */
-window.addMember = function(){
-  var inp=document.getElementById('mni'), role=document.getElementById('mrs').value;
+/* members */
+window.addMember=function(){
+  var inp=document.getElementById('mni'),role=document.getElementById('mrs').value;
   var name=inp.value.trim(); if(!name){inp.focus();return;}
-  var newId = Date.now();
-  members.push({id:newId, name:name, role:role, hosp:'none'});
+  members.push({id:Date.now(),name:name,role:role,hosp:'none'});
   inp.value=''; saveAll(); renderMembers();
 };
 
-window.deleteMember = function(mid, evt){
-  if(evt){evt.stopPropagation();}
+window.deleteMember=function(mid,evt){
+  if(evt) evt.stopPropagation();
   queue=queue.filter(function(q){return q.memberId!==mid;});
   members=members.filter(function(m){return m.id!==mid;});
-  ensureActive(); saveAll(); renderMembers(); renderQueue();
+  ensureActive('desert'); ensureActive('city');
+  saveAll(); renderMembers(); renderQueue();
 };
 
-window.toggleQueue = function(mid){
+window.toggleQueue=function(mid){
   var m=memberById(mid); if(!m) return;
+  if((m.hosp||'none')==='none'){showToast('กรุณาระบุโรงพยาบาลก่อน');return;}
   var inQ=qEntryFor(mid);
   if(inQ){
-    if(inQ.st==='away') return;
+    if(inQ.st==='away'||inQ.st==='story') return;
     var wasA=inQ.st==='active';
     queue=queue.filter(function(q){return q.memberId!==mid;});
-    if(wasA){var n=nextWaiting();if(n!==-1)queue[n].st='active';}
-    if(allFinished()&&queue.length>0){setTimeout(function(){softReset();},600);}
+    if(wasA){var n=nextWaiting(m.hosp);if(n!==-1)queue[n].st='active';}
+    if(allFinished(m.hosp)&&queueFor(m.hosp).length>0) setTimeout(function(){softReset();},600);
   } else {
-    queue.push({id:qid++, name:m.name, role:m.role, hosp:m.hosp||'none', st:'waiting', memberId:mid});
-    ensureActive();
+    queue.push({id:qid++,name:m.name,role:m.role,hosp:m.hosp,st:'waiting',memberId:mid});
+    if(m.role==='operator') qEntryFor(mid).st='skip';
+    else ensureActive(m.hosp);
   }
   saveAll(); renderMembers(); renderQueue();
 };
 
 function memberById(id){for(var i=0;i<members.length;i++) if(members[i].id===id) return members[i]; return null;}
 function qEntryFor(mid){for(var i=0;i<queue.length;i++) if(queue[i].memberId===mid) return queue[i]; return null;}
+function queueFor(hosp){return queue.filter(function(q){return q.hosp===hosp;});}
 
 function renderMembers(){
   var grid=document.getElementById('memberGrid');
   var em=document.getElementById('emMembers');
-  var filtered=members.filter(function(m){
-    if(curFilter==='all') return true;
-    return (m.hosp||'none')===curFilter;
-  });
+  var filtered=members.filter(function(m){return curFilter==='all'||(m.hosp||'none')===curFilter;});
   if(!filtered.length){grid.innerHTML='';em.style.display='block';return;}
   em.style.display='none';
   grid.innerHTML=filtered.map(function(m){
     var inQ=qEntryFor(m.id);
     var st=inQ?inQ.st:'';
-    var isAway=st==='away';
-    var cls='mcard'+(inQ&&!isAway?' inq':'')+(isAway?' isaway':'');
+    var isAway=st==='away', isStory=st==='story';
+    var cls='mcard'+(inQ&&!isAway&&!isStory?' inq':'')+(isAway?' isaway':'')+(isStory?' isstory':'');
     var stTxt='';
     if(st==='active')       stTxt='<div class="mc-st act">กำลังดำเนิน</div>';
     else if(st==='waiting') stTxt='<div class="mc-st">อยู่ในคิว</div>';
-    else if(st==='skip')    stTxt='<div class="mc-st">ไม่ว่าง/ข้าม</div>';
+    else if(st==='skip')    stTxt='<div class="mc-st">ข้าม (Operator)</div>';
     else if(st==='away')    stTxt='<div class="mc-st aw">ไม่ว่างยาว</div>';
+    else if(st==='story')   stTxt='<div class="mc-st story">ไปสตอรี่</div>';
     else if(st==='done')    stTxt='<div class="mc-st">เสร็จแล้ว</div>';
     var rb=m.role==='operator'?'<span class="mc-role op">Operator</span>':'<span class="mc-role user">ทั่วไป</span>';
     var hosp=m.hosp||'none';
-    var hospHtml='<span class="mc-hosp '+hosp+'" onclick="cycleHosp('+m.id+',event)">'
-      +(hosp==='desert'?'ทะเลทราย':hosp==='city'?'ในเมือง':'ยังไม่ระบุ')+'</span>';
-    var qLabel=inQ&&!isAway?'ถอดออก':'เพิ่มคิว';
-    var qCls='mc-qbtn'+(inQ&&!isAway?' inq':'');
-    var qDis=isAway?' disabled':'';
+    var hospHtml='<span class="mc-hosp '+hosp+'" onclick="cycleHosp('+m.id+',event)">'+(hosp==='desert'?'ทะเลทราย':hosp==='city'?'ในเมือง':'ยังไม่ระบุ')+'</span>';
+    var locked=isAway||isStory||m.role==='operator';
+    var qLabel=inQ&&!locked?'ถอดออก':'เพิ่มคิว';
+    var qCls='mc-qbtn'+(inQ&&!locked?' inq':'');
+    var noHosp=hosp==='none';
+    var qDis=(locked||noHosp)?' disabled':'';
+    var warnHtml=noHosp?'<div class="hosp-warn">ระบุโรงพยาบาลก่อน</div>':'';
     return '<div class="'+cls+'">'
       +'<div class="mc-top"><span class="mc-name">'+m.name+'</span>'
       +'<button class="mc-del" onclick="deleteMember('+m.id+',event)">x</button></div>'
       +'<div class="mc-row">'+rb+hospHtml+'</div>'
-      +stTxt
+      +stTxt+warnHtml
       +'<button class="'+qCls+'"'+qDis+' onclick="toggleQueue('+m.id+')">'+qLabel+'</button>'
       +'</div>';
   }).join('');
 }
 
 /* ===== QUEUE LOGIC ===== */
-function isOut(st){return st==='done'||st==='skip'||st==='away';}
-function allFinished(){
-  if(!queue.length) return false;
-  for(var i=0;i<queue.length;i++) if(!isOut(queue[i].st)) return false;
+function isOut(st){return st==='done'||st==='skip'||st==='away'||st==='story';}
+function allFinished(hosp){
+  var qs=queueFor(hosp);
+  if(!qs.length) return false;
+  for(var i=0;i<qs.length;i++) if(!isOut(qs[i].st)) return false;
   return true;
 }
 function softReset(){
   round++;
-  for(var i=0;i<queue.length;i++) if(queue[i].st!=='away') queue[i].st='waiting';
-  ensureActive(); saveAll();
+  for(var i=0;i<queue.length;i++){
+    if(queue[i].st!=='away'&&queue[i].st!=='story') queue[i].st='waiting';
+    if(queue[i].role==='operator') queue[i].st='skip';
+  }
+  ensureActive('desert'); ensureActive('city'); saveAll();
   showToast('รอบที่ '+round+' เริ่มแล้ว');
   renderQueue(); renderMembers();
 }
-window.hardReset = function(){queue=[];round=1;saveAll();renderQueue();renderMembers();};
-function actIdx(){for(var i=0;i<queue.length;i++) if(queue[i].st==="active") return i; return -1;}
-function ensureActive(){
-  if(actIdx()===-1)
+window.hardReset=function(){queue=[];round=1;saveAll();renderQueue();renderMembers();};
+
+function actIdxFor(hosp){
+  for(var i=0;i<queue.length;i++) if(queue[i].hosp===hosp&&queue[i].st==='active') return i;
+  return -1;
+}
+function ensureActive(hosp){
+  if(actIdxFor(hosp)===-1){
     for(var i=0;i<queue.length;i++){
-      if(queue[i].st==="waiting"){
-        if(queue[i].role==="operator"){queue[i].st="skip";continue;}
-        queue[i].st="active";break;
+      if(queue[i].hosp===hosp&&queue[i].st==='waiting'){
+        if(queue[i].role==='operator'){queue[i].st='skip';continue;}
+        queue[i].st='active'; break;
       }
     }
+  }
 }
-function nextWaiting(){
-  var c=actIdx(),s=c===-1?0:c+1;
+function nextWaiting(hosp){
+  var c=actIdxFor(hosp), s=c===-1?0:c+1;
   for(var i=s;i<queue.length;i++){
-    if(queue[i].st==="waiting"){
-      if(queue[i].role==="operator"){queue[i].st="skip";continue;}
+    if(queue[i].hosp===hosp&&queue[i].st==='waiting'){
+      if(queue[i].role==='operator'){queue[i].st='skip';continue;}
       return i;
     }
   }
   return -1;
 }
+
 function byQId(id){for(var i=0;i<queue.length;i++) if(queue[i].id===id) return queue[i]; return null;}
 function idxOfQ(id){for(var i=0;i<queue.length;i++) if(queue[i].id===id) return i; return -1;}
 
-window.changeHosp = function(qItemId, val){
-  var p=byQId(qItemId); if(!p) return;
+window.changeHosp=function(qid,val){
+  var p=byQId(qid); if(!p) return;
+  var oldHosp=p.hosp;
+  var wasA=p.st==='active';
+  if(wasA){var n=nextWaiting(oldHosp);if(n!==-1)queue[n].st='active';}
   p.hosp=val;
-  /* sync back to member card too */
-  if(p.memberId){
-    var m=memberById(p.memberId);
-    if(m) m.hosp=val;
-  }
+  if(p.memberId){var m=memberById(p.memberId);if(m)m.hosp=val;}
+  ensureActive(val);
   saveAll(); renderQueue(); renderMembers();
 };
 
-window.changeRole = function(qItemId, val){
+window.changeRole=function(qItemId,val){
   var p=byQId(qItemId); if(!p) return;
-  var wasActive=p.st==="active";
-  p.role=val;
-  if(p.memberId){
-    var m=memberById(p.memberId);
-    if(m) m.role=val;
-  }
-  /* ถ้าเปลี่ยนเป็น operator และกำลัง active อยู่ ให้ข้ามทันที */
-  if(val==="operator" && (p.st==="waiting"||p.st==="active")){
-    var wasA=p.st==="active";
-    p.st="skip";
-    if(wasA){var n=nextWaiting();if(n!==-1)queue[n].st="active";}
-    if(allFinished()){setTimeout(function(){softReset();},600);}
-  } else if(val==="user" && p.st==="skip"){
-    /* เปลี่ยนกลับเป็น user ให้กลับเข้าคิว */
-    p.st="waiting";
-    ensureActive();
+  var wasA=p.st==='active'; p.role=val;
+  if(p.memberId){var m=memberById(p.memberId);if(m)m.role=val;}
+  if(val==='operator'&&(p.st==='waiting'||p.st==='active')){
+    p.st='skip';
+    if(wasA){var n=nextWaiting(p.hosp);if(n!==-1)queue[n].st='active';}
+  } else if(val==='user'&&p.st==='skip'){
+    p.st='waiting'; ensureActive(p.hosp);
   }
   saveAll(); renderQueue(); renderMembers();
 };
 
-window.checkDone = function(id){
+window.checkDone=function(id){
   var p=byQId(id); if(!p) return;
-  p.st='done'; var n=nextWaiting(); if(n!==-1) queue[n].st='active';
+  p.st='done'; var n=nextWaiting(p.hosp); if(n!==-1) queue[n].st='active';
   saveAll();
-  if(allFinished()){setTimeout(function(){softReset();},600);} else{renderQueue();renderMembers();}
+  if(allFinished(p.hosp)){setTimeout(function(){softReset();},600);}else{renderQueue();renderMembers();}
 };
-window.doSkip = function(id){
+window.doSkip=function(id){
   var p=byQId(id); if(!p) return;
   var wasA=p.st==='active'; p.st='skip';
-  if(wasA){var n=nextWaiting();if(n!==-1)queue[n].st='active';}
+  if(wasA){var n=nextWaiting(p.hosp);if(n!==-1)queue[n].st='active';}
   saveAll();
-  if(allFinished()){setTimeout(function(){softReset();},600);} else{renderQueue();renderMembers();}
+  if(allFinished(p.hosp)){setTimeout(function(){softReset();},600);}else{renderQueue();renderMembers();}
 };
-window.doAway = function(id){
+window.doAway=function(id){
   var p=byQId(id); if(!p) return;
   var wasA=p.st==='active'; p.st='away';
-  if(wasA){var n=nextWaiting();if(n!==-1)queue[n].st='active';}
+  if(wasA){var n=nextWaiting(p.hosp);if(n!==-1)queue[n].st='active';}
   saveAll();
-  if(allFinished()){setTimeout(function(){softReset();},600);} else{renderQueue();renderMembers();}
+  if(allFinished(p.hosp)){setTimeout(function(){softReset();},600);}else{renderQueue();renderMembers();}
 };
-window.doBack = function(id){
+window.doStory=function(id){
   var p=byQId(id); if(!p) return;
-  p.st='waiting'; ensureActive(); saveAll(); renderQueue(); renderMembers();
+  var wasA=p.st==='active'; p.st='story';
+  if(wasA){var n=nextWaiting(p.hosp);if(n!==-1)queue[n].st='active';}
+  saveAll();
+  if(allFinished(p.hosp)){setTimeout(function(){softReset();},600);}else{renderQueue();renderMembers();}
 };
-window.doDelete = function(id){
+window.doBack=function(id){
+  var p=byQId(id); if(!p) return;
+  p.st='waiting'; ensureActive(p.hosp); saveAll(); renderQueue(); renderMembers();
+};
+window.doDelete=function(id){
   var i=idxOfQ(id); if(i===-1) return;
-  var wasA=queue[i].st==='active'; queue.splice(i,1);
-  if(wasA) for(var j=0;j<queue.length;j++) if(queue[j].st==='waiting'){queue[j].st='active';break;}
+  var wasA=queue[i].st==='active', hosp=queue[i].hosp; queue.splice(i,1);
+  if(wasA){var n=nextWaiting(hosp);if(n!==-1)queue[n].st='active';}
   saveAll(); renderQueue(); renderMembers();
 };
-window.moveUp = function(id){
+window.moveUp=function(id){
   var i=idxOfQ(id); if(i<=0) return;
-  var t=queue[i-1];queue[i-1]=queue[i];queue[i]=t; ensureActive(); saveAll(); renderQueue();
+  var t=queue[i-1];queue[i-1]=queue[i];queue[i]=t;
+  ensureActive(queue[i].hosp); saveAll(); renderQueue();
 };
-window.moveDown = function(id){
+window.moveDown=function(id){
   var i=idxOfQ(id); if(i===-1||i>=queue.length-1) return;
-  var t=queue[i+1];queue[i+1]=queue[i];queue[i]=t; ensureActive(); saveAll(); renderQueue();
+  var t=queue[i+1];queue[i+1]=queue[i];queue[i]=t;
+  ensureActive(queue[i].hosp); saveAll(); renderQueue();
 };
 
-function hospTagHtml(h, qItemId){
-  var opts=[
-    '<option value="none"'+(h==='none'?' selected':'')+'>ยังไม่ระบุ</option>',
-    '<option value="desert"'+(h==='desert'?' selected':'')+'>ทะเลทราย</option>',
-    '<option value="city"'+(h==='city'?' selected':'')+'>ในเมือง</option>'
-  ].join('');
-  return '<select class="hosp-sel '+(h||'none')+'" onchange="changeHosp('+qItemId+',this.value)">'+opts+'</select>';
+function hospSelHtml(h,qItemId){
+  return '<select class="hosp-sel '+(h||'none')+'" onchange="changeHosp('+qItemId+',this.value)">'
+    +'<option value="none"'+(h==='none'?' selected':'')+'>ยังไม่ระบุ</option>'
+    +'<option value="desert"'+(h==='desert'?' selected':'')+'>ทะเลทราย</option>'
+    +'<option value="city"'+(h==='city'?' selected':'')+'>ในเมือง</option>'
+    +'</select>';
 }
-
-function roleSelHtml(r, qItemId){
-  var opts=[
-    '<option value="user"'+(r==='user'?' selected':'')+'>ทั่วไป</option>',
-    '<option value="operator"'+(r==='operator'?' selected':'')+'>Operator</option>'
-  ].join('');
-  return '<select class="role-sel '+(r||'user')+'" onchange="changeRole('+qItemId+',this.value)">'+opts+'</select>';
+function roleSelHtml(r,qItemId){
+  return '<select class="role-sel '+(r||'user')+'" onchange="changeRole('+qItemId+',this.value)">'
+    +'<option value="user"'+(r==='user'?' selected':'')+'>ทั่วไป</option>'
+    +'<option value="operator"'+(r==='operator'?' selected':'')+'>Operator</option>'
+    +'</select>';
 }
-
 function badgeHtml(st){
   if(st==='waiting') return '<span class="badge bwait">รอ</span>';
   if(st==='active')  return '<span class="badge bact">กำลังดำเนิน</span>';
   if(st==='done')    return '<span class="badge bdone">เสร็จแล้ว</span>';
-  if(st==='skip')    return '<span class="badge bskip">ไม่ว่าง/ข้าม</span>';
+  if(st==='skip')    return '<span class="badge bskip">ข้าม</span>';
   if(st==='away')    return '<span class="badge baway">ไม่ว่างยาว</span>';
+  if(st==='story')   return '<span class="badge bstory">ไปสตอรี่</span>';
   return '';
 }
 
-function renderQueue(){
-  ensureActive();
-  var tb=document.getElementById('qb'), em=document.getElementById('em');
-  document.getElementById('roundLabel').innerHTML=round>1?'<span class="round-badge">รอบที่ '+round+'</span>':'';
-  if(!queue.length){tb.innerHTML='';em.style.display='block';return;}
+function renderQueueFor(hosp){
+  var tbId='qb-'+hosp, emId='em-'+hosp, statsId='stats-'+hosp;
+  var tb=document.getElementById(tbId), em=document.getElementById(emId);
+  var qs=queueFor(hosp);
+  if(!qs.length){tb.innerHTML='';em.style.display='block';
+    document.getElementById(statsId).innerHTML='';return;}
   em.style.display='none';
-  var rows='',n=0;
-  for(var i=0;i<queue.length;i++){
-    var p=queue[i];
+  var rows='', n=0;
+  for(var i=0;i<qs.length;i++){
+    var p=qs[i];
+    var gi=idxOfQ(p.id); /* global index for move */
     if(p.st==='waiting'||p.st==='active') n++;
-    var rc=p.st==='active'?'ra':p.st==='done'?'rd':p.st==='skip'?'rs':p.st==='away'?'rw':'';
-    var rb=p.role==='operator'?'<span class="role-op">Operator</span>':'<span class="role-user">ทั่วไป</span>';
+    var rc=p.st==='active'?'ra':p.st==='done'?'rd':p.st==='skip'?'rs':p.st==='away'?'rw':p.st==='story'?'rstory':'';
     var canMove=p.st==='waiting'||p.st==='active';
-    var upDis=(!canMove||i===0)?' disabled':'';
-    var dnDis=(!canMove||i===queue.length-1)?' disabled':'';
+    /* find prev/next in same hosp */
+    var prevIdx=-1,nextIdx=-1;
+    for(var j=gi-1;j>=0;j--){if(queue[j].hosp===hosp){prevIdx=j;break;}}
+    for(var j=gi+1;j<queue.length;j++){if(queue[j].hosp===hosp){nextIdx=j;break;}}
+    var upDis=(!canMove||prevIdx===-1)?' disabled':'';
+    var dnDis=(!canMove||nextIdx===-1)?' disabled':'';
     var arrows='<div class="move-col">'
       +'<button class="mbtn"'+upDis+' onclick="moveUp('+p.id+')">^</button>'
       +'<button class="mbtn"'+dnDis+' onclick="moveDown('+p.id+')">v</button>'
@@ -512,14 +534,17 @@ function renderQueue(){
       btns+='<button class="xbtn xbtn-check" onclick="checkDone('+p.id+')">เช็ค</button>';
       btns+='<button class="xbtn xbtn-skip" onclick="doSkip('+p.id+')">ไม่ว่าง</button>';
       btns+='<button class="xbtn xbtn-away" onclick="doAway('+p.id+')">ไม่ว่างยาว</button>';
+      btns+='<button class="xbtn xbtn-story" onclick="doStory('+p.id+')">ไปสตอรี่</button>';
     } else if(p.st==='waiting'){
       btns+='<button class="xbtn xbtn-skip" onclick="doSkip('+p.id+')">ไม่ว่าง</button>';
       btns+='<button class="xbtn xbtn-away" onclick="doAway('+p.id+')">ไม่ว่างยาว</button>';
+      btns+='<button class="xbtn xbtn-story" onclick="doStory('+p.id+')">ไปสตอรี่</button>';
     } else if(p.st==='skip'){
       btns+='<button class="xbtn xbtn-check" onclick="checkDone('+p.id+')">เสร็จแล้ว</button>';
-      btns+='<button class="xbtn xbtn-away" onclick="doAway('+p.id+')">ไม่ว่างยาว</button>';
-    } else if(p.st==='away'){
+    } else if(p.st==='away'||p.st==='story'){
       btns+='<button class="xbtn xbtn-back" onclick="doBack('+p.id+')">กลับเข้าคิว</button>';
+    } else if(p.st==='done'){
+      btns+='';
     }
     btns+='<button class="xbtn xbtn-del" onclick="doDelete('+p.id+')">ลบ</button>';
     var numD=isOut(p.st)?'-':n;
@@ -529,22 +554,29 @@ function renderQueue(){
       +'<td>'+badgeHtml(p.st)+'</td>'
       +'<td><div class="acts">'+arrows+'<div class="sep"></div>'
       +roleSelHtml(p.role||'user',p.id)
-      +hospTagHtml(p.hosp||'none',p.id)
       +'<div class="sep"></div>'+btns+'</div></td>'
       +'</tr>';
   }
   tb.innerHTML=rows;
-  var cW=0,cD=0,cS=0,cA=0;
-  for(var i=0;i<queue.length;i++){
-    var s=queue[i].st;
-    if(s==='waiting')cW++; else if(s==='done')cD++; else if(s==='skip')cS++; else if(s==='away')cA++;
+  var cW=0,cD=0,cS=0,cA=0,cSt=0;
+  for(var i=0;i<qs.length;i++){
+    var s=qs[i].st;
+    if(s==='waiting')cW++;else if(s==='done')cD++;else if(s==='skip')cS++;else if(s==='away')cA++;else if(s==='story')cSt++;
   }
-  document.getElementById('stats').innerHTML=
+  document.getElementById(statsId).innerHTML=
     '<div class="stat">รอ: <b>'+cW+'</b></div>'+
     '<div class="stat">เสร็จ: <b>'+cD+'</b></div>'+
     '<div class="stat">ข้าม: <b>'+cS+'</b></div>'+
-    '<div class="stat">ไม่ว่างยาว: <b>'+cA+'</b></div>'+
-    '<div class="stat">ทั้งหมด: <b>'+queue.length+'</b></div>';
+    (cA?'<div class="stat">ไม่ว่างยาว: <b>'+cA+'</b></div>':'')+
+    (cSt?'<div class="stat">สตอรี่: <b>'+cSt+'</b></div>':'')+
+    '<div class="stat">ทั้งหมด: <b>'+qs.length+'</b></div>';
+}
+
+function renderQueue(){
+  ensureActive('desert'); ensureActive('city');
+  document.getElementById('roundLabel').innerHTML=round>1?'<span class="round-badge">รอบที่ '+round+'</span>':'';
+  renderQueueFor('desert');
+  renderQueueFor('city');
 }
 
 document.getElementById('mni').addEventListener('keydown',function(e){if(e.key==='Enter')addMember();});
